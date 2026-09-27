@@ -1,0 +1,229 @@
+/* ============================================
+ * 两仪音乐工作室 · 设计系统 v4.0
+ * 钴蓝 + 白 为主 · 淡天空蓝少量 · 橘红仅点缀
+ * ============================================ */
+
+page {
+  --cobalt:   #2B3FA8;   /* 主色 · 钴蓝 */
+  --cobalt-d: #1E2E7A;   /* 钴蓝加深 */
+  --white:    #FFFFFF;   /* 主底 · 白 */
+  --paper:    #F6F8FC;   /* 极浅冷白 · 页面底 */
+  --line:     #E6ECF6;   /* 描边 */
+
+  --sky:      #D9EAF5;   /* 淡天空蓝 · 小面积 */
+  --sky-lt:   #EDF6FB;   /* 更淡天空蓝 */
+  --terra:    #E8763A;   /* 陶土橙 · 适度点缀 */
+  --navy:     #16244A;   /* 正文 */
+  --tan:      #C98A4B;   /* 约克夏金棕 */
+
+  --r-lg: 36rpx;
+  --r-md: 28rpx;
+  --r-sm: 20rpx;
+
+  background: var(--paper);
+  color: var(--navy);
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+  font-size: 28rpx;
+  line-height: 1.6;
+  letter-spacing: .5rpx;
+}
+
+/* ============ 基础 ============ */
+.page { min-height: 100vh; background: var(--paper); }
+.pad { padding: 0 40rpx; }
+
+/* ============ 色块 ============ */
+.blk {
+  position: relative;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40rpx;
+  transition: transform .18s cubic-bezier(.4,0,.2,1);
+}
+.blk:active { transform: scale(.96); }
+
+/* 主色块：钴蓝 / 白 —— 全站只用这两种做块 */
+.b-cobalt { background: var(--cobalt); color: var(--white); }
+.b-terra  { background: var(--terra);  color: var(--white); }
+.b-white  { background: var(--white);  color: var(--navy); border: 2rpx solid var(--line); }
+/* 淡天空蓝只用于极小提示块 */
+.b-sky    { background: var(--sky-lt); color: var(--navy); border: 2rpx solid var(--sky); }
+.b-navy   { background: var(--navy);   color: var(--white); }
+/* 浅蓝块：深色文字 + 黑色箭头 */
+.b-light  { background: var(--sky);    color: var(--cobalt-d); }
+.b-light .hint { color: rgba(30,46,122,.62); opacity: 1; }
+
+/* ============ Bento ============ */
+.bento {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24rpx;
+  padding: 0 40rpx;
+}
+.sp2 { grid-column: span 2; }
+.h-xl { min-height: 400rpx; }
+.h-lg { min-height: 320rpx; }
+.h-md { min-height: 220rpx; }
+.h-sm { min-height: 160rpx; }
+
+/* ============ 插画 ============ */
+.ill {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  position: absolute;
+  pointer-events: none;
+}
+.ico {
+  position: absolute;
+  top: 40rpx; left: 40rpx;
+  width: 108rpx; height: 108rpx;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 62rpx 62rpx;
+  z-index: 2;
+}
+.ico-on-dark  { background-color: rgba(255,255,255,.16); }
+.ico-on-light { background-color: rgba(43,63,168,.08); }
+
+/* ============ 文字 ============ */
+.lbl { font-size: 44rpx; font-weight: 700; letter-spacing: 4rpx; line-height: 1.25; position: relative; z-index: 2; }
+.lbl-xl { font-size: 60rpx; letter-spacing: 6rpx; }
+.lbl-sm { font-size: 34rpx; letter-spacing: 2rpx; }
+.hint { font-size: 24rpx; opacity: .62; margin-top: 8rpx; letter-spacing: 2rpx; position: relative; z-index: 2; }
+.b-white .hint, .b-sky .hint { opacity: 1; color: rgba(22,36,74,.5); }
+.num { font-size: 96rpx; font-weight: 800; line-height: 1; letter-spacing: -2rpx; position: relative; z-index: 2; }
+
+/* ============ 顶部 ============ */
+.top { position: relative; padding: 150rpx 40rpx 56rpx; overflow: hidden; background: var(--cobalt); }
+.top-h1 { font-size: 64rpx; font-weight: 800; letter-spacing: 4rpx; line-height: 1.2; color: var(--white); position: relative; z-index: 2; }
+.top-sub { font-size: 26rpx; margin-top: 14rpx; letter-spacing: 3rpx; color: rgba(255,255,255,.68); position: relative; z-index: 2; }
+.top-ava {
+  position: absolute; right: 40rpx; bottom: 48rpx;
+  width: 96rpx; height: 96rpx; border-radius: 50%;
+  background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 3;
+}
+.ava-ico { position: static; width: 52rpx; height: 52rpx; background-size: contain; }
+
+/* ============ 导航 ============ */
+.nav { position: relative; padding: 120rpx 40rpx 48rpx; overflow: hidden; background: var(--cobalt); }
+.nav-back {
+  width: 76rpx; height: 76rpx; border-radius: 50%;
+  background: var(--white); color: var(--cobalt);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 44rpx; line-height: 1; position: relative; z-index: 3;
+}
+.nav-back::after { content: '‹'; }
+.nav-h1 { font-size: 56rpx; font-weight: 800; letter-spacing: 6rpx; margin-top: 40rpx; color: var(--white); position: relative; z-index: 2; }
+.nav-sub { font-size: 24rpx; margin-top: 10rpx; letter-spacing: 3rpx; color: rgba(255,255,255,.65); position: relative; z-index: 2; }
+
+/* ============ 分区 ============ */
+.sec { padding: 56rpx 40rpx 24rpx; display: flex; align-items: baseline; gap: 16rpx; }
+.sec-t { font-size: 34rpx; font-weight: 700; letter-spacing: 3rpx; }
+.sec-n { font-size: 24rpx; color: var(--terra); font-weight: 700; }
+
+/* ============ 乐器线条图标 chip ============ */
+.item-chip {
+  width: 96rpx; height: 96rpx; flex-shrink: 0;
+  border-radius: 28rpx;
+  background-color: var(--sky-lt);
+  background-repeat: no-repeat; background-position: center;
+  background-size: 62rpx 62rpx;
+  margin-right: 26rpx;
+}
+.ic {
+  background-repeat: no-repeat; background-position: center; background-size: contain;
+}
+
+/* ============ 列表卡 ============ */
+.item {
+  display: flex; align-items: center;
+  background: var(--white);
+  border: 2rpx solid var(--line);
+  border-radius: var(--r-md);
+  padding: 32rpx;
+  margin: 0 40rpx 20rpx;
+}
+.item-dot {
+  width: 88rpx; height: 88rpx; flex-shrink: 0;
+  border-radius: 28rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 42rpx; font-weight: 700;
+  margin-right: 26rpx;
+}
+.item-b { flex: 1; min-width: 0; }
+.item-t { font-size: 32rpx; font-weight: 700; color: var(--navy); }
+.item-s { font-size: 24rpx; color: rgba(22,36,74,.55); margin-top: 6rpx; }
+
+/* ============ 标签（小面积） ============ */
+.tag {
+  display: inline-block; padding: 8rpx 22rpx; border-radius: 100rpx;
+  font-size: 22rpx; font-weight: 700; letter-spacing: 1rpx; flex-shrink: 0;
+}
+.t-cobalt { background: var(--cobalt); color: var(--white); }
+.t-sky    { background: var(--sky);    color: var(--cobalt-d); }
+.t-terra  { background: var(--terra);   color: var(--white); }
+.t-mute   { background: rgba(22,36,74,.07); color: rgba(22,36,74,.5); }
+
+/* ============ 筛选 ============ */
+.chips { display: flex; gap: 18rpx; padding: 8rpx 40rpx 28rpx; overflow-x: auto; white-space: nowrap; }
+.chip {
+  flex-shrink: 0; padding: 18rpx 40rpx; border-radius: 100rpx;
+  font-size: 27rpx; font-weight: 600;
+  background: var(--white); color: rgba(22,36,74,.6);
+  border: 2rpx solid var(--line);
+}
+.chip.on { background: var(--cobalt); color: var(--white); border-color: var(--cobalt); }
+
+/* ============ 按钮 ============ */
+.btn {
+  display: flex; align-items: center; justify-content: center;
+  height: 108rpx; border-radius: 100rpx;
+  font-size: 32rpx; font-weight: 700; letter-spacing: 6rpx; line-height: 1;
+}
+.btn::after { border: none; }
+.btn-cobalt { background: var(--cobalt); color: var(--white); }
+.btn-white  { background: var(--white);  color: var(--cobalt); border: 2rpx solid var(--line); }
+.btn-verm   { background: var(--terra);   color: var(--white); }
+.btn-sm { height: 72rpx; font-size: 26rpx; letter-spacing: 2rpx; padding: 0 40rpx; }
+/* 满宽 + 文字强制单行：小程序 button 默认宽度自适应，长文案会被挤到换行 */
+.btn-full { width: 100%; box-sizing: border-box; }
+.btn-nowrap { white-space: nowrap; }
+
+/* ============ 输入 ============ */
+.field { margin-bottom: 36rpx; }
+.field-l { display: block; font-size: 24rpx; color: rgba(22,36,74,.5); letter-spacing: 3rpx; margin-bottom: 14rpx; }
+/* input 只给左右 padding：小程序 <input> 的文本垂直居中不跟随上下 padding，
+   给了会导致文字忽上忽下。高度固定，由组件自身居中。 */
+.field-i {
+  background: var(--white); border: 2rpx solid var(--line);
+  border-radius: var(--r-md);
+  padding: 0 32rpx;
+  height: 112rpx; line-height: 108rpx;
+  font-size: 32rpx; color: var(--navy);
+  box-sizing: border-box;
+}
+
+/* ============ 空状态 ============ */
+.empty { display: flex; flex-direction: column; align-items: center; padding: 70rpx 0; }
+.empty-c { width: 120rpx; height: 120rpx; border-radius: 50%; background: var(--sky); margin-bottom: 24rpx; }
+.empty-t { font-size: 26rpx; color: rgba(22,36,74,.45); letter-spacing: 2rpx; }
+
+/* ============ 底部操作条 ============ */
+.bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  padding: 24rpx 40rpx 48rpx;
+  background: linear-gradient(180deg, rgba(246,248,252,0) 0%, var(--paper) 36%);
+}
+
+/* ============ 通用 ============ */
+.row { display: flex; align-items: center; }
+.between { display: flex; align-items: center; justify-content: space-between; }
+.f1 { flex: 1; }
+.mt-s { margin-top: 16rpx; } .mt-m { margin-top: 32rpx; } .mt-l { margin-top: 56rpx; }

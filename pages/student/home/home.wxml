@@ -1,0 +1,47 @@
+<view class="page">
+  <view class="top">
+    <view class="top-h1">{{displayName}}</view>
+    <view class="top-sub">{{todayText}} · {{upcomingLessons.length}} 节课待上</view>
+  </view>
+
+  <!-- 功能入口：钴蓝 / 浅蓝 / 陶土橙 / 浅蓝，与老师端同一套实体色块 -->
+  <view class="tiles">
+    <view class="tile b-cobalt" bindtap="goBook" hover-class="tile-hover" hover-stay-time="90">
+      <view class="tile-t">立即约课</view>
+      <view class="ill ill-arrow-w tile-a"></view>
+    </view>
+
+    <view class="tile b-light" bindtap="goSchedule" hover-class="tile-hover" hover-stay-time="90">
+      <view class="tile-t">我的课表</view>
+      <view class="ill ill-arrow-b tile-a"></view>
+    </view>
+
+    <view class="tile b-terra" bindtap="goRecords" hover-class="tile-hover" hover-stay-time="90">
+      <view class="tile-t">上课记录</view>
+      <view class="ill ill-arrow-w tile-a"></view>
+    </view>
+
+    <view class="tile b-light" bindtap="goProfile" hover-class="tile-hover" hover-stay-time="90">
+      <view class="tile-t">我的</view>
+      <view class="ill ill-arrow-b tile-a"></view>
+    </view>
+  </view>
+
+  <view class="sec"><text class="sec-t">即将开始</text><text class="sec-n">{{upcomingLessons.length}}</text></view>
+
+  <block wx:if="{{upcomingLessons.length > 0}}">
+    <view class="item" wx:for="{{upcomingLessons}}" wx:key="id">
+      <view class="item-chip ic {{item.ill}}"></view>
+      <view class="item-b">
+        <view class="item-t">{{item.courseName}}</view>
+        <view class="item-s">{{item.friendlyDate}} · {{item.timeSlot}}</view>
+      </view>
+      <view class="tag {{item.statusTag}}">{{item.statusText}}</view>
+    </view>
+  </block>
+  <view class="empty" wx:else>
+    <view class="empty-c"></view>
+    <view class="empty-t">还没有课，去约一节吧</view>
+  </view>
+  <view style="height:80rpx"></view>
+</view>

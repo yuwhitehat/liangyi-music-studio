@@ -1,0 +1,95 @@
+<view class="page">
+  <view class="nav">
+    <view class="ill ill-plant nav-plant"></view>
+    <view class="nav-back" bindtap="goBack"></view>
+    <view class="nav-h1">学员</view>
+    <view class="nav-sub">共 {{students.length}} 位同学</view>
+  </view>
+
+  <view class="srch">
+    <input class="field-i" placeholder="搜索姓名或手机号" bindinput="onSearch" value="{{keyword}}" />
+    <view class="add-btn" bindtap="onOpenAdd" hover-class="tile-hover" hover-stay-time="90">+</view>
+  </view>
+
+  <block wx:if="{{filteredStudents.length > 0}}">
+    <view class="item" wx:for="{{filteredStudents}}" wx:key="id" bindtap="onEdit" data-id="{{item.id}}">
+      <view class="st-ava" style="background:{{item.bg}};color:{{item.fg}}">{{item.name[0]}}</view>
+      <view class="item-b">
+        <view class="item-t">{{item.name}}</view>
+        <view class="item-s">共报 {{item.totalLessons}} 节课 · 已上 {{item.done}} 节课</view>
+        <view class="item-over" wx:if="{{item.over}}">已超 {{item.overBy}} 节</view>
+      </view>
+      <view class="st-go">›</view>
+    </view>
+  </block>
+  <view class="empty" wx:else>
+    <view class="empty-c"></view>
+    <view class="empty-t">{{keyword ? '没有找到这位同学' : '还没有学员，点右上角 + 添加'}}</view>
+  </view>
+
+  <!-- 添加 / 编辑弹层 -->
+  <view class="mask" wx:if="{{showForm}}" bindtap="onCloseForm"></view>
+  <view class="sheet" wx:if="{{showForm}}">
+    <view class="sheet-h">
+      <text class="sheet-t">{{editingId ? '编辑学员' : '添加学员'}}</text>
+      <text class="sheet-x" bindtap="onCloseForm">✕</text>
+    </view>
+
+    <scroll-view scroll-y class="form-body">
+      <view class="field">
+        <text class="field-l">姓名</text>
+        <input class="field-i" maxlength="12" placeholder="学员真实姓名" bindinput="onIn" data-k="name" value="{{form.name}}" />
+      </view>
+      <view class="field">
+        <text class="field-l">手机号</text>
+        <input class="field-i" type="number" maxlength="11" placeholder="学员登录小程序用这个号" bindinput="onIn" data-k="phone" value="{{form.phone}}" />
+      </view>
+
+      <!-- 课时：方便上线时录入老学员已有数据 -->
+      <view class="grp">
+        <text class="grp-t">课时</text>
+        <text class="grp-d">老学员直接填现状即可：共报几节、一共上了几节。之后在小程序里签到的课会自动累加到「已上」</text>
+        <view class="two">
+          <view class="sub">
+            <text class="field-l">共报（节）</text>
+            <input class="field-i num" type="number" maxlength="4" placeholder="0" bindinput="onNum" data-k="totalLessons" value="{{form.totalLessons}}" />
+          </view>
+          <view class="sub">
+            <text class="field-l">已上 · 共几节（节）</text>
+            <input class="field-i num" type="number" maxlength="4" placeholder="0" bindinput="onNum" data-k="doneBefore" value="{{form.doneBefore}}" />
+          </view>
+        </view>
+      </view>
+
+      <!-- 报名日期：可选 -->
+      <view class="grp">
+        <text class="grp-t">报名日期<text class="opt">选填</text></text>
+        <view class="two">
+          <view class="sub">
+            <text class="field-l">开始</text>
+            <picker mode="date" value="{{form.enrollStart}}" bindchange="onDate" data-k="enrollStart">
+              <view class="dt {{form.enrollStart ? 'has' : ''}}">{{form.enrollStart || '选择日期'}}</view>
+            </picker>
+          </view>
+          <view class="sub">
+            <text class="field-l">结束</text>
+            <picker mode="date" value="{{form.enrollEnd}}" start="{{form.enrollStart}}" bindchange="onDate" data-k="enrollEnd">
+              <view class="dt {{form.enrollEnd ? 'has' : ''}}">{{form.enrollEnd || '选择日期'}}</view>
+            </picker>
+          </view>
+        </view>
+        <view class="clr" wx:if="{{form.enrollStart || form.enrollEnd}}" bindtap="onClearDates">清除日期</view>
+      </view>
+
+      <view class="field">
+        <text class="field-l">备注</text>
+        <input class="field-i" maxlength="30" placeholder="如：钢琴 · 四级" bindinput="onIn" data-k="note" value="{{form.note}}" />
+      </view>
+    </scroll-view>
+
+    <button class="btn btn-cobalt btn-full btn-nowrap" bindtap="onSubmit">{{editingId ? '保存修改' : '确认添加'}}</button>
+    <view class="del" wx:if="{{editingId}}" bindtap="onRemove">删除该学员</view>
+  </view>
+
+  <view style="height:60rpx"></view>
+</view>

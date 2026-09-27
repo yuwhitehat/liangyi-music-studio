@@ -1,0 +1,7 @@
+{
+  "name": "admin",
+  "version": "1.0.0",
+  "description": "超管专用：登记与管理工作室老师",
+  "main": "index.js",
+  "dependencies": { "wx-server-sdk": "~2.6.3" }
+}

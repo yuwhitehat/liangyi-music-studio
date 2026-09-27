@@ -1,0 +1,19 @@
+name: 静态校验
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: 页面四件套 / WXML 配平 / 事件函数 / require / 弹窗文案 / JS 语法
+        run: python3 tools/check_project.py

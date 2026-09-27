@@ -1,0 +1,55 @@
+<view class="page">
+  <view class="nav">
+    <view class="ill ill-plant nav-plant"></view>
+    <view class="nav-back" bindtap="goBack"></view>
+    <view class="nav-h1">上课记录</view>
+    <view class="nav-sub">一节一节攒起来的</view>
+  </view>
+
+  <!-- 我的课时：仅在老师登记过节数或日期时出现 -->
+  <view class="enroll" wx:if="{{enroll}}">
+    <view class="en-top">
+      <view class="en-cell" wx:if="{{enroll.hasTotal}}">
+        <text class="en-n">{{enroll.total}}</text><text class="en-l">共报（节）</text>
+      </view>
+      <view class="en-cell" wx:if="{{enroll.hasUsed}}">
+        <text class="en-n">{{enroll.used}}</text><text class="en-l">已上（节）</text>
+      </view>
+      <view class="en-cell" wx:if="{{enroll.hasTotal}}">
+        <text class="en-n {{enroll.over ? 'en-over' : 'en-hi'}}">{{enroll.over ? '超' + enroll.overBy : enroll.remain}}</text>
+        <text class="en-l">{{enroll.over ? '已超（节）' : '剩余（节）'}}</text>
+      </view>
+    </view>
+
+    <view class="en-bar" wx:if="{{enroll.hasTotal && enroll.hasUsed}}">
+      <view class="en-fill {{enroll.over ? 'en-fill-over' : ''}}" style="width:{{enroll.pct}}%"></view>
+    </view>
+    <view class="en-over-tip" wx:if="{{enroll.over}}">已上的课比报名总数多 {{enroll.overBy}} 节，请找老师补充课时</view>
+
+    <view class="en-date" wx:if="{{enroll.hasDate}}">
+      <text class="en-dl">报名周期</text>
+      <text class="en-dv">{{enroll.span}}</text>
+      <text class="en-dd" wx:if="{{enroll.daysLeft >= 0}}">剩 {{enroll.daysLeft}} 天</text>
+    </view>
+  </view>
+
+  <view class="sec"><text class="sec-t">课程记录</text><text class="sec-n">{{records.length}}</text></view>
+
+  <view class="rc" wx:for="{{records}}" wx:key="id">
+    <view class="rc-dot" style="background:{{item.bg}}"></view>
+    <view class="rc-item">
+      <view class="row between">
+        <text class="rc-t">{{item.courseName}}</text>
+        <text class="tag {{item.statusTag}}">{{item.statusText}}</text>
+      </view>
+      <text class="rc-m">{{item.friendlyDate}} · {{item.timeSlot}}</text>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{records.length === 0}}">
+    <view class="empty-c"></view>
+    <view class="empty-t">还没有上课记录</view>
+  </view>
+
+  <view style="height:60rpx"></view>
+</view>

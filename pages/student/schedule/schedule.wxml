@@ -1,0 +1,42 @@
+<view class="page">
+  <view class="nav">
+    <view class="ill ill-dog-w nav-dog"></view>
+    <view class="nav-back" bindtap="goBack"></view>
+    <view class="nav-h1">我的课表</view>
+    <view class="nav-sub">看看接下来要上什么</view>
+  </view>
+
+  <view class="chips">
+    <view class="chip {{activeTab === 'upcoming' ? 'on' : ''}}" bindtap="onTab" data-tab="upcoming">待上课</view>
+    <view class="chip {{activeTab === 'completed' ? 'on' : ''}}" bindtap="onTab" data-tab="completed">已结束</view>
+  </view>
+
+  <view class="bk" wx:for="{{displayLessons}}" wx:key="id">
+    <view class="bk-l" style="background:{{item.bg}};color:{{item.fg}}">
+      <text class="bk-d1">{{item.dayLabel}}</text>
+      <text class="bk-d2">{{item.monthLabel}}</text>
+    </view>
+    <view class="bk-b">
+      <view class="row between">
+        <text class="bk-t">{{item.courseName}}<text class="occ" wx:if="{{item.occurrence}}">{{item.occurrence}}</text></text>
+        <text class="tag {{item.statusTag}}">{{item.statusText}}</text>
+      </view>
+      <text class="bk-m">{{item.timeSlot}}</text>
+
+      <!-- 待上课且是今天：可签到；未取消未完成的课都可申请取消（取消受 6 小时限制） -->
+      <view class="acts" wx:if="{{item.status === 'booked'}}">
+        <view class="ab ab-main" wx:if="{{item.canCheckIn}}" bindtap="onSelfCheckIn" data-id="{{item.id}}">签到</view>
+        <view class="ab" bindtap="onSelfCancel" data-id="{{item.id}}" data-hours="{{item.hoursLeft}}"
+              data-course="{{item.courseName}}" data-time="{{item.timeSlot}}" data-date="{{item.dateLabel}}">
+          取消课程
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{displayLessons.length === 0}}">
+    <view class="empty-c"></view>
+    <view class="empty-t">{{activeTab === 'upcoming' ? '还没有待上的课' : '还没有已结束的课'}}</view>
+  </view>
+  <view style="height:60rpx"></view>
+</view>

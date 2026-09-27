@@ -1,0 +1,24 @@
+.nav { padding-bottom: 50rpx; }
+.nav-note { width: 150rpx; height: 150rpx; right: 50rpx; top: 80rpx; opacity: .25; }
+.hscroll { width: 100%; white-space: nowrap; }
+.hrow { display: inline-flex; gap: 18rpx; padding: 0 40rpx 8rpx; }
+.hrow .chip { padding: 20rpx 36rpx; }
+
+.bk { display: flex; align-items: stretch; background: #FFFFFF; border-radius: 32rpx; margin: 0 40rpx 24rpx; overflow: hidden; }
+.bk-l { width: 140rpx; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #FFFFFF; }
+.bk-d1 { font-size: 48rpx; font-weight: 800; line-height: 1; }
+.bk-d2 { font-size: 22rpx; opacity: .85; margin-top: 10rpx; }
+.bk-b { flex: 1; padding: 34rpx 32rpx; }
+.bk-t { font-size: 36rpx; font-weight: 700; color: #16244A; letter-spacing: 2rpx; }
+.bk-m { font-size: 26rpx; color: rgba(22,36,74,.5); margin-top: 12rpx; }
+.bk-go {
+  width: 120rpx; flex-shrink: 0;
+  background: #2B3FA8; color: #FFFFFF;
+  font-size: 40rpx; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.bk-go:active { background: #E8763A; color: #FFFFFF; }
+
+.bk-top2 { display: flex; align-items: center; }
+.bk-chip { width: 68rpx; height: 68rpx; border-radius: 20rpx; background-color: #EDF6FB; flex-shrink: 0;
+  background-repeat: no-repeat; background-position: center; background-size: 44rpx 44rpx; margin-right: 20rpx; }

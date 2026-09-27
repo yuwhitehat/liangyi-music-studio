@@ -1,0 +1,26 @@
+.nav { padding-bottom: 50rpx; }
+.nav-dog { width: 158rpx; height: 166rpx; right: 28rpx; bottom: -6rpx; opacity: .22; }
+.chips { margin-top: 32rpx; }
+.bk { display: flex; background: #FFFFFF; border-radius: 32rpx; margin: 0 40rpx 24rpx; overflow: hidden; }
+.bk-l { width: 140rpx; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.bk-d1 { font-size: 48rpx; font-weight: 800; line-height: 1; }
+.bk-d2 { font-size: 22rpx; opacity: .85; margin-top: 10rpx; }
+.bk-b { flex: 1; padding: 34rpx 32rpx; }
+.bk-t { font-size: 36rpx; font-weight: 700; color: #16244A; letter-spacing: 2rpx; }
+.bk-m { display: block; font-size: 26rpx; color: rgba(22,36,74,.5); margin-top: 14rpx; }
+
+.occ {
+  display: inline-block; margin-left: 12rpx; padding: 2rpx 14rpx;
+  border-radius: 100rpx; background: #EDF6FB; color: #1E2E7A;
+  font-size: 20rpx; font-weight: 700; letter-spacing: 1rpx;
+}
+
+/* ── 学员签到 / 取消 ── */
+.acts { display: flex; gap: 16rpx; margin-top: 24rpx; }
+.ab {
+  flex: 1; height: 72rpx; display: flex; align-items: center; justify-content: center;
+  border-radius: 100rpx; font-size: 26rpx; font-weight: 700; letter-spacing: 1rpx;
+  background: #F6F8FC; color: #16244A; border: 2rpx solid #E6ECF6;
+}
+.ab:active { transform: scale(.97); }
+.ab-main { background: #2B3FA8; color: #FFFFFF; border-color: #2B3FA8; }

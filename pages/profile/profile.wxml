@@ -1,0 +1,72 @@
+<view class="page">
+  <view class="nav">
+    <view class="ill ill-dog-w pf-dog"></view>
+    <view class="ill ill-cloud pf-cloud"></view>
+    <view class="nav-back" bindtap="goBack"></view>
+    <view class="pf-row">
+      <view class="pf-ava">{{userInfo.name ? userInfo.name[0] : '?'}}</view>
+      <view>
+        <view class="pf-name">{{userInfo.name || '未登录'}}</view>
+        <view class="pf-role">{{roleText}} · {{studio.name}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="bento pf">
+    <view class="blk b-white h-md" bindtap="onAbout">
+      <view class="ico ico-on-light ill-plant"></view>
+      <view class="lbl lbl-sm">关于工作室</view>
+    </view>
+
+    <view class="blk b-terra h-md" bindtap="onContact">
+      <view class="ico ico-on-dark ill-clock"></view>
+      <view class="lbl lbl-sm">联系我们</view>
+    </view>
+
+    <!-- 工作室资料：超管默认拥有，其他老师需被授权 -->
+    <view class="blk b-cobalt sp2 h-sm" wx:if="{{canEditStudio}}" bindtap="goStudio">
+      <view class="row between" style="width:100%">
+        <view>
+          <view class="lbl lbl-sm">工作室信息</view>
+          <view class="hint">{{studioDone ? '介绍 · 电话 · 地址 已完善' : '点击补充介绍、电话、地址'}}</view>
+        </view>
+        <text style="font-size:40rpx;opacity:.7">→</text>
+      </view>
+    </view>
+  </view>
+
+  <view style="padding:48rpx 40rpx 0">
+    <button class="btn btn-white" style="color:#E8763A" bindtap="onLogout">退出登录</button>
+  </view>
+
+  <view class="pf-foot">
+    <text class="pf-cn">{{studio.name}}</text>
+    <text class="pf-en">v24.0</text>
+  </view>
+
+  <!-- 信息弹层：每条独立一行，点击可复制 -->
+  <view class="mask" wx:if="{{sheet.show}}" bindtap="onCloseSheet"></view>
+  <view class="sheet" wx:if="{{sheet.show}}">
+    <view class="sh-h">
+      <text class="sh-t">{{sheet.title}}</text>
+      <text class="sh-x" bindtap="onCloseSheet">✕</text>
+    </view>
+
+    <!-- 关于工作室：整段介绍 -->
+    <view wx:if="{{sheet.kind === 'about'}}" class="sh-intro">{{sheet.intro}}</view>
+
+    <!-- 联系我们：逐行 -->
+    <view wx:else class="sh-rows">
+      <view class="sh-row" wx:for="{{sheet.rows}}" wx:key="k"
+            bindtap="onCopyRow" data-v="{{item.value}}" data-c="{{item.copy}}" data-l="{{item.label}}">
+        <text class="sh-l">{{item.label}}</text>
+        <text class="sh-v {{item.wrap ? 'wrap' : ''}}">{{item.value}}</text>
+        <text class="sh-c" wx:if="{{item.copy}}">复制</text>
+      </view>
+    </view>
+
+    <view class="sh-tip" wx:if="{{sheet.tip}}">{{sheet.tip}}</view>
+
+    <button class="btn btn-cobalt btn-full btn-nowrap sh-ok" bindtap="onCloseSheet">知道了</button>
+  </view>
+</view>

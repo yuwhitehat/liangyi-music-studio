@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# 微信开发者工具本地私有配置（每人不同，不入库）
+project.private.config.json
+
+# Python 工具脚本缓存
+__pycache__/
+*.pyc
+
+# 依赖与构建产物
+node_modules/
+miniprogram_npm/

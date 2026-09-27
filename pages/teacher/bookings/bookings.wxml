@@ -1,0 +1,94 @@
+<view class="page">
+  <view class="nav">
+    <view class="ill ill-dog-w nav-dog"></view>
+    <view class="nav-back" bindtap="goBack"></view>
+    <view class="nav-h1">约课管理</view>
+    <view class="nav-sub">签到 · 取消 · 查看名单</view>
+  </view>
+
+  <!-- 状态筛选 -->
+  <view class="frow">
+    <text class="fcap">状态</text>
+    <view class="chips">
+      <view class="chip {{activeFilter === item.k ? 'on' : ''}}" wx:for="{{statusFilters}}" wx:key="k"
+            bindtap="onFilter" data-filter="{{item.k}}">{{item.t}}</view>
+    </view>
+  </view>
+
+  <!-- 日期筛选 -->
+  <view class="frow">
+    <text class="fcap">日期</text>
+    <view class="chips">
+      <view class="chip {{dateRange === item.k ? 'on' : ''}}" wx:for="{{dateFilters}}" wx:key="k"
+            bindtap="onDateRange" data-range="{{item.k}}">{{item.t}}</view>
+      <picker class="pk-wrap" mode="date" value="{{pickDate}}" bindchange="onPickDate">
+        <view class="chip {{dateRange === 'day' ? 'on' : ''}}">{{pickDate ? pickMD + ' ▾' : '指定某天 ▾'}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="sumbar">
+    <text class="sum-n">{{filteredLessons.length}}</text>
+    <text class="sum-t">节课 · {{activeLabel}} · {{dateLabel}}</text>
+    <text class="sum-x" wx:if="{{activeFilter !== 'all' || dateRange !== 'all'}}" bindtap="onClearFilter">清除筛选</text>
+  </view>
+
+  <block wx:if="{{filteredLessons.length > 0}}">
+    <view class="bk" wx:for="{{filteredLessons}}" wx:key="id">
+      <view class="bk-l" style="background:{{item.bg}};color:{{item.fg}}">
+        <text class="bk-d1">{{item.dayLabel}}</text>
+        <text class="bk-d2">{{item.dateLabel}}</text>
+      </view>
+      <view class="bk-b">
+        <view class="row between">
+          <text class="bk-t">{{item.courseName}}<text class="occ" wx:if="{{item.occurrence}}">{{item.occurrence}}</text></text>
+          <text class="tag {{item.statusTag}}">{{item.statusText}}</text>
+        </view>
+        <view class="bk-m">
+          <text class="bk-time">{{item.timeSlot}}</text>
+          <text class="bk-dur">{{item.minutes}} 分</text>
+          <text class="bk-date">{{item.dateLabel}}</text>
+        </view>
+        <view class="bk-s">{{item.studentNames ? '👤 ' + item.studentNames : '还没有人约课'}}</view>
+        <view class="bk-a">
+          <view class="ba-btn ba-main" wx:if="{{item.status === 'booked' && item.canCheckIn}}" bindtap="onComplete" data-id="{{item.id}}">签到</view>
+          <view class="ba-btn ba-main" wx:if="{{item.status === 'available'}}" bindtap="onOpenPicker" data-id="{{item.id}}" data-course="{{item.courseName}}" data-time="{{item.timeStart}}">指定学员</view>
+          <view class="ba-btn" wx:if="{{item.status === 'booked'}}" bindtap="onCancel" data-id="{{item.id}}">取消课程</view>
+          <view class="ba-btn" wx:if="{{item.status !== 'booked'}}" bindtap="onDelete" data-id="{{item.id}}">删除</view>
+        </view>
+      </view>
+    </view>
+  </block>
+  <view class="empty" wx:else>
+    <view class="empty-c"></view>
+    <view class="empty-t">{{emptyTitle}}</view>
+    <view class="empty-s" wx:if="{{emptyHint}}">{{emptyHint}}</view>
+    <view class="empty-a" wx:if="{{hasFilter}}" bindtap="onShowAllDates">看全部日期</view>
+  </view>
+  <view style="height:60rpx"></view>
+
+  <!-- 学员选择弹层 -->
+  <view class="mask" wx:if="{{showPicker}}" bindtap="onClosePicker"></view>
+  <view class="sheet" wx:if="{{showPicker}}">
+    <view class="sheet-h">
+      <text class="sheet-t">指定学员</text>
+      <text class="sheet-x" bindtap="onClosePicker">✕</text>
+    </view>
+    <view class="pk-target">{{pickerCourse}} · {{pickerTime}} 起</view>
+    <input class="field-i" placeholder="搜索学员姓名" bindinput="onSearchStudent" value="{{keyword}}" />
+    <scroll-view scroll-y class="pk-list">
+      <view class="pk-row" wx:for="{{pickerList}}" wx:key="id" bindtap="onToggleStudent" data-id="{{item.id}}">
+        <view class="pk-ava" style="background:{{item.bg}};color:{{item.fg}}">{{item.name[0]}}</view>
+        <view class="pk-b">
+          <view class="pk-n">{{item.name}}</view>
+          <view class="pk-s">{{item.note ? item.note : '未备注'}}</view>
+        </view>
+        <view class="pk-box {{item.checked ? 'on' : ''}}">{{item.checked ? '✓' : ''}}</view>
+      </view>
+    </scroll-view>
+    <view class="pk-foot">
+      <text class="pk-cnt">已选 {{picked.length}} 人</text>
+      <button class="btn btn-cobalt btn-sm" bindtap="onSaveBooking">保存</button>
+    </view>
+  </view>
+</view>

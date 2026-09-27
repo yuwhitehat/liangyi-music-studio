@@ -1,0 +1,9 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "两仪音乐工作室",
+  "navigationStyle": "custom",
+  "backgroundColor": "#FFFFFF",
+  "backgroundColorTop": "#EDF6FB",
+  "backgroundColorBottom": "#FFFFFF",
+  "enablePullDownRefresh": false
+}

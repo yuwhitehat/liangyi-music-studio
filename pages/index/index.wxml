@@ -1,0 +1,33 @@
+<view class="home">
+
+  <!-- 淡天空蓝：窄带 -->
+  <view class="band-sky">
+    <view class="ill ill-sun sky-sun"></view>
+    <view class="ill ill-cloud sky-cloud"></view>
+    <view class="sky-en">LIANGYI MUSIC STUDIO</view>
+  </view>
+
+  <!-- 钴蓝主带 -->
+  <view class="band-cobalt">
+    <view class="brand-t">两仪音乐</view>
+  </view>
+
+  <!-- 白色地面：约克夏在右侧 -->
+  <view class="band-white">
+    <view class="ill ill-dog g-dog"></view>
+
+    <!-- 左右并排 · 实体按钮 -->
+    <view class="roles">
+      <view class="role r-cobalt" bindtap="onSelectRole" data-role="teacher" hover-class="role-hover" hover-stay-time="90">
+        <view class="role-t">我是老师</view>
+        <view class="ill ill-arrow-w role-arrow"></view>
+      </view>
+
+      <view class="role r-terra" bindtap="onSelectRole" data-role="student" hover-class="role-hover" hover-stay-time="90">
+        <view class="role-t">我是学员</view>
+        <view class="ill ill-arrow-w role-arrow"></view>
+      </view>
+    </view>
+  </view>
+
+</view>

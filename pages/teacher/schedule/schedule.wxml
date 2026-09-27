@@ -1,0 +1,175 @@
+<view class="page">
+  <view class="nav">
+    <view class="nav-back" bindtap="goBack"></view>
+    <view class="nav-h1">排课</view>
+    <view class="nav-sub">选日期 · 选课程 · 定时间</view>
+  </view>
+
+  <!-- 日期 -->
+  <view class="sec"><text class="sec-t">选择日期</text></view>
+  <scroll-view scroll-x class="hscroll">
+    <view class="hrow">
+      <view class="dcard {{selectedDate === item.date ? 'on' : ''}} {{dateBusy[item.date] ? 'busy' : ''}}"
+            wx:for="{{dateList}}" wx:key="date"
+            bindtap="onSelectDate" data-date="{{item.date}}">
+        <view class="dcard-w">{{item.isToday ? '今天' : '周' + item.weekdayText}}</view>
+        <view class="dcard-d">{{item.day}}</view>
+        <view class="dcard-m">{{dateBusy[item.date] ? dateBusy[item.date] + ' 节' : item.month + '月'}}</view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 课程类型 -->
+  <view class="sec"><text class="sec-t">课程类型</text><text class="sec-n">{{courses.length}}</text></view>
+  <view class="cgrid">
+    <view class="ct {{selectedCourse === c.id ? 'on' : ''}}"
+          wx:for="{{courses}}" wx:for-item="c" wx:key="id"
+          bindtap="onSelectCourse" data-id="{{c.id}}" data-name="{{c.name}}" data-dur="{{c.duration}}">
+      <view class="ct-chip ic {{c.ill}}"></view>
+      <view class="ct-n">{{c.name}}</view>
+      <view class="ct-d">{{c.duration}}分</view>
+    </view>
+  </view>
+
+  <!-- 自由选时间 -->
+  <view class="sec"><text class="sec-t">上课时间</text><text class="sec-n">自由选</text></view>
+  <view class="tpanel">
+    <view class="tp-row">
+      <view class="tp-cell">
+        <text class="tp-l">开始</text>
+        <picker mode="time" value="{{startAt}}" start="06:00" end="23:00" bindchange="onStartChange">
+          <view class="tp-val">{{startAt}}</view>
+        </picker>
+      </view>
+      <text class="tp-dash">—</text>
+      <view class="tp-cell">
+        <text class="tp-l">结束</text>
+        <picker mode="time" value="{{endAt}}" start="06:00" end="23:59" bindchange="onEndChange">
+          <view class="tp-val">{{endAt}}</view>
+        </picker>
+      </view>
+      <view class="tp-dur">
+        <text class="tp-num">{{minutes}}</text>
+        <text class="tp-unit">分钟</text>
+      </view>
+    </view>
+
+    <view class="qp">
+      <text class="qp-l">快捷时长</text>
+      <view class="qp-chips">
+        <view class="qp-c {{minutes === d ? 'on' : ''}}" wx:for="{{durations}}" wx:for-item="d" wx:key="*this"
+              bindtap="onPickDuration" data-d="{{d}}">{{d}}分</view>
+      </view>
+    </view>
+
+    <!-- 固定课：每周同一时间，排一次即可 -->
+    <view class="qp">
+      <text class="qp-l">重复</text>
+      <view class="qp-chips">
+        <view class="qp-c {{repeat === 0 ? 'on' : ''}}" bindtap="onPickRepeat" data-r="0">不重复</view>
+        <view class="qp-c {{repeat === 7 ? 'on' : ''}}" bindtap="onPickRepeat" data-r="7">每周</view>
+        <view class="qp-c {{repeat === 14 ? 'on' : ''}}" bindtap="onPickRepeat" data-r="14">隔周</view>
+      </view>
+    </view>
+
+    <view class="qp" wx:if="{{repeat > 0}}">
+      <text class="qp-l">上几节</text>
+      <view class="qp-chips">
+        <view class="qp-c {{times === t ? 'on' : ''}}" wx:for="{{timesOptions}}" wx:for-item="t" wx:key="*this"
+              bindtap="onPickTimes" data-t="{{t}}">{{t}} 节</view>
+      </view>
+      <view class="rp-hint">{{repeat === 14 ? '隔周' : '每周'}}{{weekdayText}} {{startAt}} 起，共 {{times}} 节，到 {{lastDate}}</view>
+    </view>
+
+    <!-- 是否已有预约：工作室多是在微信上先约好，这里直接登记 -->
+    <view class="bk-row">
+      <view class="bk-l">
+        <text class="bk-t">已有学员预约</text>
+        <text class="bk-s">开启后可直接指定学员，无需等对方来约</text>
+      </view>
+      <switch checked="{{hasBooking}}" color="#2B3FA8" bindchange="onToggleBooking" />
+    </view>
+
+    <view class="bk-stu" wx:if="{{hasBooking}}">
+      <view class="bk-stu-h" bindtap="onOpenPicker">
+        <text class="bk-stu-l">选择学员</text>
+        <text class="bk-stu-v">{{pickedNames ? pickedNames : '未选择'}} ›</text>
+      </view>
+      <view class="bk-tags" wx:if="{{pickedStudents.length > 0}}">
+        <view class="bk-tag" wx:for="{{pickedStudents}}" wx:key="id">
+          <text>{{item.name}}</text>
+          <text class="bk-tag-x" catchtap="onDropStudent" data-id="{{item.id}}">✕</text>
+        </view>
+      </view>
+    </view>
+
+    <button class="btn btn-cobalt btn-add" bindtap="onAddSlot">+ 添加这个时段</button>
+  </view>
+
+  <!-- 已添加 -->
+  <view class="sec"><text class="sec-t">本次待排</text><text class="sec-n">{{slots.length}}</text></view>
+  <block wx:if="{{slots.length > 0}}">
+    <view class="srow" wx:for="{{slots}}" wx:key="key">
+      <view class="srow-chip ic {{item.ill}}"></view>
+      <view class="srow-b">
+        <view class="srow-t">{{item.timeStart}} – {{item.timeEnd}}
+          <text class="srow-tag {{item.booked ? 'on' : ''}}">{{item.booked ? '已约' : '待约'}}</text>
+        </view>
+        <view class="srow-s">{{item.courseName}} · {{item.minutes}} 分钟{{item.studentNames ? ' · ' + item.studentNames : ''}}</view>
+        <view class="srow-rp" wx:if="{{item.repeatText}}">{{item.repeatText}}</view>
+      </view>
+      <view class="srow-x" bindtap="onRemoveSlot" data-key="{{item.key}}">✕</view>
+    </view>
+  </block>
+  <view class="empty" wx:else>
+    <view class="empty-c"></view>
+    <view class="empty-t">还没有添加时段</view>
+  </view>
+
+  <!-- 排课冲突清单：每条独立一行 -->
+  <view class="mask" wx:if="{{showConflicts}}" bindtap="onCloseConflicts"></view>
+  <view class="sheet" wx:if="{{showConflicts}}">
+    <view class="sheet-h">
+      <text class="sheet-t">{{conflictTitle}}</text>
+      <text class="sheet-x" bindtap="onCloseConflicts">✕</text>
+    </view>
+    <view class="cf-list">
+      <view class="cf-item" wx:for="{{conflicts}}" wx:key="*this">
+        <text class="cf-no">{{index + 1}}</text>
+        <text class="cf-txt">{{item}}</text>
+      </view>
+    </view>
+    <button class="btn btn-cobalt btn-full btn-nowrap" bindtap="onCloseConflicts">知道了</button>
+  </view>
+
+  <view style="height:220rpx"></view>
+  <view class="bar"><button class="btn btn-cobalt" bindtap="onConfirmSchedule">确认排课{{slots.length ? '（' + slots.length + ' 节）' : ''}}</button></view>
+
+  <!-- 学员选择弹层 -->
+  <view class="mask" wx:if="{{showPicker}}" bindtap="onClosePicker"></view>
+  <view class="sheet" wx:if="{{showPicker}}">
+    <view class="sheet-h">
+      <text class="sheet-t">选择学员</text>
+      <text class="sheet-x" bindtap="onClosePicker">✕</text>
+    </view>
+    <input class="field-i" placeholder="搜索学员姓名" bindinput="onSearchStudent" value="{{keyword}}" />
+    <scroll-view scroll-y class="pk-list">
+      <view class="pk-row" wx:for="{{pickerList}}" wx:key="id" bindtap="onToggleStudent" data-id="{{item.id}}">
+        <view class="pk-ava" style="background:{{item.bg}};color:{{item.fg}}">{{item.name[0]}}</view>
+        <view class="pk-b">
+          <view class="pk-n">{{item.name}}</view>
+          <view class="pk-s">{{item.note ? item.note : '未备注'}}</view>
+        </view>
+        <view class="pk-box {{item.checked ? 'on' : ''}}">{{item.checked ? '✓' : ''}}</view>
+      </view>
+      <view class="empty" wx:if="{{pickerList.length === 0}}">
+        <view class="empty-c"></view>
+        <view class="empty-t">没有匹配的学员</view>
+      </view>
+    </scroll-view>
+    <view class="pk-foot">
+      <text class="pk-cnt">已选 {{pickedStudents.length}} 人</text>
+      <button class="btn btn-cobalt btn-sm" bindtap="onClosePicker">确定</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,29 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/teacher/home/home",
+    "pages/teacher/schedule/schedule",
+    "pages/teacher/bookings/bookings",
+    "pages/teacher/students/students",
+    "pages/teacher/teachers/teachers",
+    "pages/teacher/course-types/course-types",
+    "pages/student/home/home",
+    "pages/student/book/book",
+    "pages/student/schedule/schedule",
+    "pages/student/records/records",
+    "pages/profile/profile",
+    "pages/teacher/studio/studio"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F4F1EA",
+    "backgroundColorTop": "#6EC6E6",
+    "backgroundColorBottom": "#F4F1EA",
+    "enablePullDownRefresh": false
+  },
+  "cloud": true,
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

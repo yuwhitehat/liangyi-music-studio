@@ -1,0 +1,82 @@
+<view class="page">
+  <view class="nav">
+    <view class="ill ill-plant-w nav-plant"></view>
+    <view class="nav-back" bindtap="goBack"></view>
+    <view class="nav-h1">老师</view>
+    <view class="nav-sub">{{list.length}} 位 · 仅超级管理员可管理</view>
+  </view>
+
+  <view class="sec"><text class="sec-t">老师名单</text><text class="sec-n">{{filteredList.length}}</text></view>
+  <view style="padding:0 40rpx 24rpx">
+    <input class="field-i" placeholder="搜索姓名或手机号" bindinput="onSearch" value="{{keyword}}" />
+  </view>
+
+  <view class="tcard" wx:for="{{filteredList}}" wx:key="id" bindtap="onEdit" data-id="{{item.id}}">
+    <view class="t-ava" style="background:{{item.bg}};color:{{item.fg}}">{{item.name[0]}}</view>
+    <view class="t-b">
+      <view class="t-name">{{item.name}}
+        <text class="tag t-terra" wx:if="{{item.isSuperAdmin}}">超级管理员</text>
+      </view>
+      <view class="t-phone">{{item.phone}}</view>
+      <view class="t-perms" wx:if="{{item.permLabels.length > 0}}">
+        <text class="t-perm" wx:for="{{item.permLabels}}" wx:for-item="pl" wx:key="*this">{{pl}}</text>
+      </view>
+    </view>
+    <view class="t-go">›</view>
+  </view>
+
+  <view class="empty" wx:if="{{filteredList.length === 0}}">
+    <view class="empty-c"></view>
+    <view class="empty-t">{{keyword ? '没有匹配的老师' : '还没有老师'}}</view>
+  </view>
+
+  <view style="padding:24rpx 40rpx 0">
+    <button class="btn btn-cobalt btn-full btn-nowrap" bindtap="onOpenAdd">+ 添加老师</button>
+  </view>
+
+  <!-- 编辑 / 授权弹层 -->
+  <view class="mask" wx:if="{{showForm}}" bindtap="onCloseForm"></view>
+  <view class="sheet" wx:if="{{showForm}}">
+    <view class="sheet-h">
+      <text class="sheet-t">{{editingId ? '编辑老师' : '添加老师'}}</text>
+      <text class="sheet-x" bindtap="onCloseForm">✕</text>
+    </view>
+
+    <view class="field">
+      <text class="field-l">姓名</text>
+      <input class="field-i" maxlength="12" placeholder="如：周老师" bindinput="onIn" data-k="name" value="{{form.name}}" />
+    </view>
+    <view class="field">
+      <text class="field-l">手机号</text>
+      <input class="field-i" type="number" maxlength="11" placeholder="登录老师端用这个号" bindinput="onIn" data-k="phone" value="{{form.phone}}" />
+    </view>
+
+    <!-- 权限授予 -->
+    <view class="perm-box">
+      <text class="perm-h">权限</text>
+      <view class="perm-row" wx:for="{{permDefs}}" wx:key="k">
+        <view class="perm-t">
+          <text class="perm-n">{{item.t}}</text>
+          <text class="perm-d">{{item.d}}</text>
+        </view>
+        <switch checked="{{form.perms[item.k]}}" color="#2B3FA8" disabled="{{form.isSuperAdmin}}"
+                bindchange="onTogglePerm" data-k="{{item.k}}" />
+      </view>
+
+      <view class="perm-row perm-super">
+        <view class="perm-t">
+          <text class="perm-n">超级管理员</text>
+          <text class="perm-d">可管理老师、课程类型与全部权限</text>
+        </view>
+        <switch checked="{{form.isSuperAdmin}}" color="#E8763A" bindchange="onToggleSuper" />
+      </view>
+
+      <view class="perm-note" wx:if="{{form.isSuperAdmin}}">超级管理员默认拥有全部权限，无法单独收回</view>
+    </view>
+
+    <button class="btn btn-cobalt btn-full btn-nowrap" bindtap="onSubmit">{{editingId ? '保存' : '确认添加'}}</button>
+    <view class="del" wx:if="{{editingId && !isSelf}}" bindtap="onRemove">删除该老师</view>
+  </view>
+
+  <view style="height:60rpx"></view>
+</view>

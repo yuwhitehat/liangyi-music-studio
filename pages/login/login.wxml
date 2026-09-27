@@ -1,0 +1,60 @@
+<view class="page">
+  <view class="lg-top">
+    <view class="nav-back" bindtap="onBack"></view>
+    <view class="lg-h1">{{pendingRole === 'teacher' ? '老师登录' : '学员登录'}}</view>
+    <view class="lg-sub">两仪音乐工作室</view>
+  </view>
+
+  <view class="lg-form">
+    <!-- 约克夏：黑色线条，骑在钴蓝带与白色区交界（同首页） -->
+    <view class="ill ill-dog lg-dog"></view>
+
+    <!-- 第一步：手机号 -->
+    <block wx:if="{{step === 'phone'}}">
+      <view class="field">
+        <text class="field-l">手机号</text>
+        <input class="field-i" type="number" maxlength="11" placeholder="请输入手机号"
+               bindinput="onInputPhone" value="{{phone}}" />
+      </view>
+      <view class="tip">老师由工作室预先登记，手机号匹配即身份确认</view>
+
+      <!-- 开发期提示卡：上线前把 login.js 里 DEV_MODE 设为 false 即自动隐藏 -->
+      <view class="dev" wx:if="{{devMode}}">
+        <view class="dev-h">测试账号 · {{devHint}}</view>
+        <view class="dev-row" wx:for="{{devAccounts}}" wx:key="phone"
+              bindtap="onPickDevPhone" data-phone="{{item.phone}}" data-name="{{item.name}}" data-role="{{item.role}}">
+          <text class="dev-tag {{item.tag === '超级管理员' ? 'dev-tag-super' : ''}}">{{item.tag}}</text>
+          <text class="dev-name">{{item.name}}</text>
+          <text class="dev-phone">{{item.phone}}</text>
+        </view>
+      </view>
+
+      <button class="btn btn-cobalt btn-full" bindtap="onVerifyPhone">验证并进入</button>
+
+      <view class="divider"><text>或</text></view>
+
+      <button class="btn btn-wx btn-full" open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber">
+        <text class="wx-dot">✓</text><text class="wx-txt">微信一键登录</text>
+      </button>
+    </block>
+
+    <!-- 第二步：仅新学员需要补一个名字 -->
+    <block wx:else>
+      <view class="matched">
+        <text class="matched-ok">手机号已验证</text>
+        <text class="matched-no">{{phone}}</text>
+      </view>
+      <view class="field">
+        <text class="field-l">怎么称呼你</text>
+        <input class="field-i" maxlength="12" placeholder="请输入姓名"
+               bindinput="onInputName" value="{{name}}" focus />
+      </view>
+      <view class="tip">这个名字会显示在老师的课表上</view>
+
+      <button class="btn btn-cobalt btn-full" bindtap="onConfirmStudent">进入工作室</button>
+      <view class="lg-switch" bindtap="onBackToPhone">换个手机号</view>
+    </block>
+
+    <view class="lg-home" bindtap="onGoHome">回到首页</view>
+  </view>
+</view>

@@ -1,0 +1,7 @@
+{
+  "name": "sync",
+  "version": "1.0.0",
+  "description": "本地优先模式的服务端：拉取 / 推送 / 学员约课",
+  "main": "index.js",
+  "dependencies": { "wx-server-sdk": "~2.6.3" }
+}

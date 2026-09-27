@@ -1,0 +1,9 @@
+/* ── 顶部：只有名字与日期，无太阳云朵 ── */
+.top {
+  position: relative; background: #2B3FA8;
+  padding: 150rpx 40rpx 64rpx; overflow: hidden;
+}
+.top-h1 { font-size: 72rpx; font-weight: 800; letter-spacing: 4rpx; color: #FFFFFF; line-height: 1.15; }
+.top-sub { font-size: 26rpx; color: rgba(255,255,255,.68); margin-top: 14rpx; letter-spacing: 3rpx; }
+
+/* 功能色块 .tiles / .tile 已在 app.wxss 全站共享 */

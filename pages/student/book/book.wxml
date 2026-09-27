@@ -1,0 +1,42 @@
+<view class="page">
+  <view class="nav">
+    <view class="ill ill-note nav-note"></view>
+    <view class="nav-back" bindtap="goBack"></view>
+    <view class="nav-h1">约课</view>
+    <view class="nav-sub">挑一个喜欢的时段</view>
+  </view>
+
+  <view class="sec"><text class="sec-t">课程</text></view>
+  <scroll-view scroll-x class="hscroll">
+    <view class="hrow">
+      <view class="chip {{selectedCourseType === '' ? 'on' : ''}}" bindtap="onSelectCourse" data-id="">全部</view>
+      <view class="chip {{selectedCourseType === c.id ? 'on' : ''}}"
+            wx:for="{{courseTypes}}" wx:for-item="c" wx:key="id"
+            bindtap="onSelectCourse" data-id="{{c.id}}">{{c.icon}} {{c.name}}</view>
+    </view>
+  </scroll-view>
+
+  <view class="sec"><text class="sec-t">可约时段</text><text class="sec-n">{{shownCount}}</text></view>
+
+  <block wx:if="{{shownCount > 0}}">
+    <view class="bk" wx:for="{{shownLessons}}" wx:key="id">
+      <view class="bk-l" style="background:{{item.bg}};color:{{item.fg}}">
+        <text class="bk-d1">{{item.dayNum}}</text>
+        <text class="bk-d2">{{item.monLabel}}</text>
+      </view>
+      <view class="bk-b">
+        <view class="bk-top2">
+          <view class="bk-chip ic {{item.ill}}"></view>
+          <view class="bk-t">{{item.courseName}}</view>
+        </view>
+        <view class="bk-m">{{item.timeSlot}} · {{item.friendlyDate}}</view>
+      </view>
+      <view class="bk-go" bindtap="onBook" data-id="{{item.id}}" data-name="{{item.courseName}}">约</view>
+    </view>
+  </block>
+  <view class="empty" wx:else>
+    <view class="empty-c"></view>
+    <view class="empty-t">这个课程暂时没有空位</view>
+  </view>
+  <view style="height:60rpx"></view>
+</view>

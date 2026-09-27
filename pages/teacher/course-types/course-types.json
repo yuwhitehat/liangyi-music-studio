@@ -1,0 +1,9 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "课程类型",
+  "navigationStyle": "custom",
+  "backgroundColor": "#F6F8FC",
+  "backgroundColorTop": "#2B3FA8",
+  "backgroundColorBottom": "#F6F8FC",
+  "enablePullDownRefresh": false
+}

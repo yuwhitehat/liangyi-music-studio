@@ -1,0 +1,43 @@
+<view class="page">
+  <view class="top">
+    <view class="top-h1">{{displayName}}</view>
+    <view class="top-sub">{{todayText}} · {{stats.todayCount}} 节课 · {{stats.openCount}} 节待约</view>
+  </view>
+
+  <!-- 功能入口：钴蓝 / 浅蓝 / 钴蓝 / 陶土橙，全部同尺寸 -->
+  <view class="tiles">
+    <view class="tile b-cobalt" bindtap="goSchedule" hover-class="tile-hover" hover-stay-time="90">
+      <view class="tile-t">排课</view>
+      <view class="ill ill-arrow-w tile-a"></view>
+    </view>
+
+    <view class="tile b-light" bindtap="goBookings" hover-class="tile-hover" hover-stay-time="90">
+      <view class="tile-t">约课管理</view>
+      <view class="ill ill-arrow-b tile-a"></view>
+    </view>
+
+    <view class="tile b-cobalt" bindtap="goStudents" hover-class="tile-hover" hover-stay-time="90">
+      <view class="tile-t">学员</view>
+      <view class="ill ill-arrow-w tile-a"></view>
+    </view>
+
+    <!-- 老师：仅超级管理员可见 -->
+    <view class="tile b-terra" wx:if="{{isSuperAdmin}}" bindtap="goTeachers" hover-class="tile-hover" hover-stay-time="90">
+      <view class="tile-t">老师</view>
+      <view class="ill ill-arrow-w tile-a"></view>
+    </view>
+
+    <!-- 课程：超管可增删改课程类型 -->
+    <view class="tile b-terra" wx:if="{{isSuperAdmin}}" bindtap="goCourses" hover-class="tile-hover" hover-stay-time="90">
+      <view class="tile-t">课程</view>
+      <view class="ill ill-arrow-w tile-a"></view>
+    </view>
+
+    <view class="tile b-light" bindtap="goProfile" hover-class="tile-hover" hover-stay-time="90">
+      <view class="tile-t">我的</view>
+      <view class="ill ill-arrow-b tile-a"></view>
+    </view>
+  </view>
+
+  <view style="height:60rpx"></view>
+</view>

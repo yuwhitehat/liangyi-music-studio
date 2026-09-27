@@ -1,0 +1,47 @@
+.nav { padding-bottom: 50rpx; }
+.nav-plant { width: 150rpx; height: 195rpx; right: 40rpx; top: 70rpx; opacity: .9; }
+
+.rc { position: relative; padding-left: 56rpx; }
+.rc-dot {
+  position: absolute; left: 40rpx; top: 46rpx;
+  width: 24rpx; height: 24rpx; border-radius: 50%; z-index: 2;
+}
+.rc::before {
+  content: ''; position: absolute;
+  left: 51rpx; top: 46rpx; bottom: -12rpx; width: 2rpx;
+  background: rgba(22,36,74,.12);
+}
+.rc:last-child::before { display: none; }
+.rc-item {
+  background: #FFFFFF; border-radius: 28rpx;
+  padding: 30rpx 32rpx; margin: 0 40rpx 20rpx;
+}
+.rc-t { font-size: 32rpx; font-weight: 700; color: #16244A; }
+.rc-m { display: block; font-size: 24rpx; color: rgba(22,36,74,.5); margin-top: 12rpx; }
+
+/* ── 我的课时档案 ── */
+.enroll {
+  margin: 32rpx 40rpx 0; padding: 32rpx;
+  background: #FFFFFF; border: 2rpx solid #E6ECF6; border-radius: 32rpx;
+}
+.en-top { display: flex; }
+.en-cell { flex: 1; text-align: center; }
+.en-n { display: block; font-size: 52rpx; font-weight: 800; color: #2B3FA8; line-height: 1; }
+.en-hi { color: #E8763A; }
+.en-l { display: block; font-size: 21rpx; color: rgba(22,36,74,.5); margin-top: 12rpx; letter-spacing: 1rpx; }
+
+.en-bar { height: 12rpx; border-radius: 100rpx; background: #EDF6FB; overflow: hidden; margin-top: 30rpx; }
+.en-fill { height: 100%; border-radius: 100rpx; background: #2B3FA8; }
+
+.en-date {
+  display: flex; align-items: center; gap: 16rpx;
+  margin-top: 28rpx; padding-top: 26rpx; border-top: 2rpx dashed #E6ECF6;
+}
+.en-dl { font-size: 22rpx; color: rgba(22,36,74,.45); letter-spacing: 2rpx; flex-shrink: 0; }
+.en-dv { font-size: 26rpx; font-weight: 700; color: #16244A; flex: 1; letter-spacing: .5rpx; }
+.en-dd { font-size: 21rpx; font-weight: 700; color: #E8763A; background: rgba(232,118,58,.1);
+  padding: 4rpx 16rpx; border-radius: 100rpx; flex-shrink: 0; }
+
+.en-over { color: #C0392B; }
+.en-fill-over { background: #C0392B; }
+.en-over-tip { margin-top: 16rpx; font-size: 22rpx; color: #C0392B; letter-spacing: .5rpx; }

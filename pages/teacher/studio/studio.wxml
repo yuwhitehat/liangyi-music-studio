@@ -1,0 +1,50 @@
+<view class="page">
+  <view class="nav">
+    <view class="ill ill-plant-w nav-plant"></view>
+    <view class="nav-back" bindtap="goBack"></view>
+    <view class="nav-h1">工作室信息</view>
+    <view class="nav-sub">学员在小程序里看到的就是这些</view>
+  </view>
+
+  <view class="form">
+    <view class="field">
+      <text class="field-l">工作室名称</text>
+      <input class="field-i" maxlength="20" placeholder="如：两仪音乐工作室" bindinput="onIn" data-k="name" value="{{f.name}}" />
+    </view>
+
+    <view class="field">
+      <text class="field-l">工作室介绍</text>
+      <view class="ta-box">
+        <textarea class="field-ta" maxlength="200" placeholder="一句话介绍工作室、教学理念等"
+                  bindinput="onIn" data-k="intro" value="{{f.intro}}" />
+      </view>
+      <text class="cnt">{{f.intro.length}} / 200</text>
+    </view>
+
+    <view class="field">
+      <text class="field-l">联系电话</text>
+      <input class="field-i" type="text" maxlength="20" placeholder="手机号或座机" bindinput="onIn" data-k="phone" value="{{f.phone}}" />
+    </view>
+
+    <view class="field">
+      <text class="field-l">工作室地址</text>
+      <view class="ta-box ta-box-s">
+        <textarea class="field-ta" maxlength="100" placeholder="详细到门牌号，方便学员找到"
+                  bindinput="onIn" data-k="address" value="{{f.address}}" />
+      </view>
+    </view>
+
+    <view class="field">
+      <text class="field-l">微信号</text>
+      <input class="field-i" maxlength="30" placeholder="选填，学员可加微信约课" bindinput="onIn" data-k="wechat" value="{{f.wechat}}" />
+    </view>
+
+    <view class="field">
+      <text class="field-l">开放时间</text>
+      <input class="field-i" maxlength="30" placeholder="如：周一至周日 09:00–21:00" bindinput="onIn" data-k="hours" value="{{f.hours}}" />
+    </view>
+
+    <view class="tip">介绍、电话、地址建议都填上，学员咨询时能直接看到</view>
+    <button class="btn btn-cobalt btn-full" bindtap="onSave">保存</button>
+  </view>
+</view>

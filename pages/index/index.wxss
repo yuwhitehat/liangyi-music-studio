@@ -1,0 +1,80 @@
+.home { min-height: 100vh; background: #FFFFFF; display: flex; flex-direction: column; }
+
+/* —— 淡天空蓝窄带 —— */
+.band-sky {
+  position: relative; background: #EDF6FB;
+  height: 170rpx; padding: 96rpx 40rpx 0; overflow: hidden;
+}
+.sky-sun   { width: 76rpx; height: 76rpx; top: 84rpx; right: 160rpx; }
+.sky-cloud { width: 130rpx; height: 66rpx;  top: 92rpx; left: 40rpx; }
+.sky-en {
+  position: relative; z-index: 2;
+  font-size: 20rpx; letter-spacing: 8rpx; color: rgba(43,63,168,.5); font-weight: 600;
+}
+
+/* —— 钴蓝主带 —— */
+.band-cobalt {
+  position: relative; background: #2B3FA8;
+  padding: 56rpx 40rpx 150rpx; overflow: hidden;
+}
+.brand-t {
+  position: relative; z-index: 2;
+  font-size: 104rpx; font-weight: 800; letter-spacing: 12rpx;
+  color: #FFFFFF; line-height: 1.1;
+}
+
+/* —— 白色地面 —— */
+.band-white {
+  position: relative; flex: 1; background: #FFFFFF;
+  padding: 150rpx 40rpx 100rpx;
+}
+.g-dog { width: 210rpx; height: 220rpx; right: 36rpx; top: -186rpx; }
+
+/* —— 左右并排 —— */
+.roles { display: flex; gap: 28rpx; position: relative; z-index: 3; }
+
+/* —— 实体按钮：硬阴影 + 按下位移 —— */
+.role {
+  flex: 1;
+  position: relative;
+  height: 300rpx;
+  border-radius: 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* 底部硬阴影 = 按钮的"厚度"，无模糊 */
+  box-shadow: 0 16rpx 0 rgba(0,0,0,.22);
+  transform: translateY(0);
+  transition: transform .11s cubic-bezier(.3,.7,.4,1), box-shadow .11s cubic-bezier(.3,.7,.4,1);
+}
+
+/* 顶部高光，强化立体感 */
+.role::before {
+  content: '';
+  position: absolute; left: 0; right: 0; top: 0; height: 42rpx;
+  border-radius: 40rpx 40rpx 60% 60%;
+  background: rgba(255,255,255,.14);
+  pointer-events: none;
+}
+
+/* 按下：整块下沉，厚度被压扁 */
+.role-hover, .role:active {
+  transform: translateY(16rpx);
+  box-shadow: 0 0 0 rgba(0,0,0,.22);
+}
+
+.r-cobalt { background: #2B3FA8; color: #FFFFFF; }
+.r-terra  { background: #E8763A; color: #FFFFFF; }
+
+.role-t {
+  font-size: 40rpx; font-weight: 700; letter-spacing: 5rpx;
+  position: relative; z-index: 2;
+}
+.role-arrow {
+  position: relative !important;
+  top: auto !important; right: auto !important;
+  width: 96rpx; height: 82rpx;
+  margin-top: 26rpx;
+  z-index: 2;
+}

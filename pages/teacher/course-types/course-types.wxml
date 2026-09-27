@@ -1,0 +1,63 @@
+<view class="page">
+  <view class="nav">
+    <view class="nav-back" bindtap="goBack"></view>
+    <view class="nav-h1">课程类型</view>
+    <view class="nav-sub">{{list.length}} 门 · 仅超级管理员可编辑</view>
+  </view>
+
+  <view class="sec"><text class="sec-t">已开设课程</text><text class="sec-n">{{list.length}}</text></view>
+
+  <view class="crow" wx:for="{{list}}" wx:key="id">
+    <view class="crow-chip ic {{item.ill}}"></view>
+    <view class="crow-b">
+      <view class="crow-n">{{item.name}}</view>
+      <view class="crow-d">默认 {{item.duration}} 分钟</view>
+    </view>
+    <view class="crow-a" bindtap="onEdit" data-id="{{item.id}}">编辑</view>
+    <view class="crow-x" bindtap="onRemove" data-id="{{item.id}}" data-name="{{item.name}}">✕</view>
+  </view>
+
+  <view class="acts">
+    <button class="btn btn-cobalt btn-full btn-nowrap" bindtap="onOpenAdd">+ 添加课程类型</button>
+    <view class="act-reset" bindtap="onReset">恢复默认四门课</view>
+  </view>
+
+  <!-- 编辑面板 -->
+  <view class="mask" wx:if="{{showForm}}" bindtap="onCloseForm"></view>
+  <view class="sheet" wx:if="{{showForm}}">
+    <view class="sheet-h">
+      <text class="sheet-t">{{editingId ? '编辑课程类型' : '添加课程类型'}}</text>
+      <text class="sheet-x" bindtap="onCloseForm">✕</text>
+    </view>
+
+    <view class="field">
+      <text class="field-l">名称</text>
+      <input class="field-i" maxlength="8" placeholder="如：钢琴" bindinput="onName" value="{{form.name}}" />
+    </view>
+
+    <view class="field">
+      <text class="field-l">默认时长（分钟）</text>
+      <view class="dur-chips">
+        <view class="dur-c {{form.duration === d ? 'on' : ''}}" wx:for="{{durations}}" wx:for-item="d" wx:key="*this"
+              bindtap="onDuration" data-d="{{d}}">{{d}}</view>
+        <input class="dur-in" type="number" maxlength="3" placeholder="自定义"
+               bindinput="onDurationInput" value="{{customDur}}" />
+      </view>
+    </view>
+
+    <view class="field">
+      <text class="field-l">图标</text>
+      <view class="igrid">
+        <view class="icell {{form.ill === i.ill ? 'on' : ''}}" wx:for="{{iconLibrary}}" wx:for-item="i" wx:key="ill"
+              bindtap="onPickIcon" data-ill="{{i.ill}}">
+          <view class="icell-chip ic {{i.ill}}"></view>
+          <text class="icell-l">{{i.label}}</text>
+        </view>
+      </view>
+    </view>
+
+    <button class="btn btn-cobalt btn-full btn-nowrap" bindtap="onSubmit">{{editingId ? '保存修改' : '确认添加'}}</button>
+  </view>
+
+  <view style="height:60rpx"></view>
+</view>
