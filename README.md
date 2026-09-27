@@ -704,10 +704,25 @@ function list() { return saved.map(normalize) }           // 所有读取都走�
 
 ## 🚀 运行
 
-1. 微信开发者工具 → 导入项目 → 选择本目录
-2. AppID 用测试号即可
-3. 若要接云开发：开通环境 → 替换 `app.js` 里的 `your-cloud-env-id` → 部署 `cloudfunctions/login` → 建 `lessons` 集合
-4. 不接云开发也能跑，所有页面用 Mock 数据
+1. 微信开发者工具 → 导入项目 → 选择本目录（基础库 ≥ 3.17.3）
+2. **AppID 换成你自己的**：仓库里 `project.config.json` 带的是原作者的 AppID，
+   fork 后请改成你自己的（选「测试号」也能跑起来看效果）
+3. **不接云开发也能完整体验**：所有数据走本地缓存 + 内置种子数据，页面照常增删改查
+4. 若要接云开发（多人共用一份数据）：见 [`云开发接入.md`](./云开发接入.md)
+   —— 开通环境 → 建 6 个集合 → 填 `cloudfunctions/admin` 的 `BOOTSTRAP_ADMINS`
+   → 填 `utils/config.js` 的 `CLOUD_ENV` → 部署 `login` / `sync` / `admin` 三个云函数
+5. 改完代码跑一下静态校验：`python3 tools/check_project.py`（CI 里也会自动跑）
+
+### 📄 相关文档
+
+| 文档 | 内容 |
+|---|---|
+| [`docs/PRD.md`](./docs/PRD.md) | 产品需求：角色与场景、信息架构、逐页需求 + 19 张原型图、业务规则、验收清单 |
+| [`docs/详细设计文档.md`](./docs/详细设计文档.md) | 技术选型、角色权限、前端 UI、数据库、后端接口、异常边界 |
+| [`docs/mockups/`](./docs/mockups/) | 原型图（与代码同源渲染，改样式后重跑 `tools/build_prd_assets.py`） |
+| [`云开发接入.md`](./云开发接入.md) | 从本地模式切到云开发的完整步骤 |
+
+> 项目里的老师、学员、手机号、地址全部是**虚构种子数据**，用于本地演示。
 
 ## 📂 目录
 
