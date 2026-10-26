@@ -54,8 +54,8 @@
 
 /* ── 约克夏：黑色线条，骑在钴蓝/白交界，与首页一致 ── */
 .lg-dog {
-  width: 210rpx; height: 220rpx;
-  right: 36rpx; top: -198rpx;
+  width: 210rpx; height: 174rpx;
+  right: 36rpx; top: -157rpx;
 }
 
 /* ── 回到首页：无箭头，黑色 ── */
