@@ -172,6 +172,31 @@ s.gap(20); s.btn('+ 添加课程类型')
 s.text(W//2,s.y+10,'恢复默认四门课',24,mix(NAVY,.4),False,anchor='mm')
 s.save('08-课程类型.png','⑧ 课程类型 · 增删改 + 图标选择（仅超管）')
 
+# ═══ 24 游客浏览（只读展示，无任何操作）═══
+s=Screen(h=1180)
+s.rect(0,0,W,380,fill=COB)
+s.rect(40,110,76,76,fill=WHITE,r=38)
+s.chevron_left(70,148,30,COB)
+s.text(40,226,'工作室',56,WHITE,True)
+s.text(40,300,'两仪音乐工作室',24,mix(WHITE,.65,COB))
+s.ill('dog-w.png', W-24-220, 380-114, 220, alpha=.22)
+s.y=412
+s.rect(40,s.y,W-80,212,fill=WHITE,outline=LINE,r=32,wd=2)
+s.text(80,s.y+40,'关于工作室',34,NAVY,True)
+for i,l in enumerate(['专注少儿钢琴与声乐教学，小班与一对一并行，','鼓励孩子在演奏中建立自信。']):
+    s.text(80,s.y+100+i*54,l,28,mix(NAVY,.72))
+s.y+=212+32
+s.rect(40,s.y,W-80,510,fill=WHITE,outline=LINE,r=32,wd=2)
+s.text(80,s.y+40,'联系我们',34,NAVY,True)
+yy=s.y+110
+for lab,val in [('电话','138 0000 0000'),('微信','liangyi_music'),
+                ('地址','上海市徐汇区 XX 路 1 号 3 层'),('开放时间','周一至周日 09:00–21:00')]:
+    s.text(80,yy+8,lab,25,mix(NAVY,.45))
+    s.text(W-80,yy+4,val,29,NAVY,True,anchor='rm')
+    yy+=88; s.rect(80,yy-18,W-160,2,fill=LINE)
+s.y+=510+40
+s.save('24-游客浏览.png','游客浏览 · 只读「关于工作室 / 联系我们」，无任何操作')
+
 # ═══ 09 学员端工作台 ═══
 s=Screen(); s.band('陈小满同学','今天 · 9月27日 · 2 节课待上')
 s.tiles([T('立即约课',COB,WHITE,WHITE),T('我的课表',SKY,COBD,INK),T('上课记录',TERRA,WHITE,WHITE),T('我的',SKY,COBD,INK)])

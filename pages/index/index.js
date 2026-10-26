@@ -14,6 +14,10 @@ Page({
     wx.reLaunch({ url })
   },
 
+  onGuest() {
+    wx.navigateTo({ url: '/pages/guest/guest' })
+  },
+
   onSelectRole(e) {
     app.setPendingRole(e.currentTarget.dataset.role)
     wx.setStorageSync('pendingRole', e.currentTarget.dataset.role)

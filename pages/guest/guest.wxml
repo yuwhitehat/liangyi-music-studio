@@ -1,0 +1,29 @@
+<view class="page">
+  <view class="nav">
+    <view class="ill ill-dog-w nav-dog"></view>
+    <view class="nav-back" bindtap="onBack"></view>
+    <view class="nav-h1">工作室</view>
+    <view class="nav-sub">{{studio.name || '两仪音乐工作室'}}</view>
+  </view>
+
+  <!-- 关于工作室：只展示老师填写的内容 -->
+  <view class="card">
+    <view class="card-t">关于工作室</view>
+    <view class="intro" wx:if="{{studio.intro}}">{{studio.intro}}</view>
+    <view class="ph" wx:else>老师还没有填写工作室介绍</view>
+  </view>
+
+  <!-- 联系我们：只展示，不做复制等操作 -->
+  <view class="card">
+    <view class="card-t">联系我们</view>
+    <block wx:if="{{rows.length > 0}}">
+      <view class="row" wx:for="{{rows}}" wx:key="label">
+        <text class="row-l">{{item.label}}</text>
+        <text class="row-v {{item.wrap ? 'wrap' : ''}}">{{item.value}}</text>
+      </view>
+    </block>
+    <view class="ph" wx:else>老师还没有填写联系方式</view>
+  </view>
+
+  <view class="safe"></view>
+</view>

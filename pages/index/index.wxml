@@ -30,4 +30,6 @@
     </view>
   </view>
 
+  <!-- 游客入口：只读工作室介绍与联系方式 -->
+  <view class="guest-link" bindtap="onGuest">先随便看看 · 工作室介绍</view>
 </view>

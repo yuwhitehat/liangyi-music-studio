@@ -12,6 +12,7 @@
     "pages/student/book/book",
     "pages/student/schedule/schedule",
     "pages/student/records/records",
+    "pages/guest/guest",
     "pages/profile/profile",
     "pages/teacher/studio/studio"
   ],

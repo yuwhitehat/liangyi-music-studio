@@ -188,5 +188,9 @@ Page({
     else wx.reLaunch({ url: '/pages/index/index' })
   },
 
+  onGuest() {
+    wx.navigateTo({ url: '/pages/guest/guest' })
+  },
+
   onGoHome() { wx.reLaunch({ url: '/pages/index/index' }) }
 })

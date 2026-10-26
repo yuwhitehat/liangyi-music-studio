@@ -78,3 +78,11 @@
   margin-top: 26rpx;
   z-index: 2;
 }
+
+/* —— 游客入口：一行小字，不加装饰 —— */
+.guest-link {
+  position: relative; z-index: 3;
+  margin-top: 40rpx; padding: 18rpx;
+  text-align: center; font-size: 26rpx; letter-spacing: 2rpx;
+  color: rgba(22,36,74,.45);
+}

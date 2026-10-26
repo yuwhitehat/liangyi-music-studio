@@ -86,3 +86,9 @@
 .dev-tag-super { background: #E8763A; color: #FFFFFF; }
 .dev-name { font-size: 27rpx; color: #16244A; font-weight: 600; flex: 1; }
 .dev-phone { font-size: 26rpx; color: rgba(22,36,74,.55); letter-spacing: 1rpx; }
+
+/* —— 游客浏览 —— */
+.lg-guest {
+  text-align: center; margin-top: 18rpx; padding: 16rpx;
+  font-size: 24rpx; color: rgba(22,36,74,.38); letter-spacing: 2rpx;
+}

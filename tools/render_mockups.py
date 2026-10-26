@@ -105,6 +105,12 @@ class Screen:
             rr=size*.075
             d.ellipse([r[0]-rr*u,r[1]-rr*u,r[0]+rr*u,r[1]+rr*u], fill=color)
 
+    def chevron_left(self, x, y, size=34, color='#9AA1AE'):
+        """左侧 < 指示符（返回键）"""
+        d, u = self.d, S
+        d.line([((x+size*.62)*u,(y-size*.42)*u),(x*u,y*u),((x+size*.62)*u,(y+size*.42)*u)],
+               fill=color, width=int(size*.17*u), joint='curve')
+
     def arrow(self, x, y, size=64, color='#FFFFFF'):
         """卡通线条箭头（简化：弧杆 + 两撇）"""
         d = self.d

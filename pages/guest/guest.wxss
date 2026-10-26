@@ -1,0 +1,21 @@
+.nav { padding-bottom: 56rpx; }
+.nav-dog { width: 220rpx; height: 114rpx; right: 24rpx; bottom: 0; opacity: .22; }
+
+.card {
+  margin: 32rpx 40rpx 0; padding: 40rpx;
+  background: #FFFFFF; border: 2rpx solid #E6ECF6; border-radius: 32rpx;
+}
+.card-t { font-size: 34rpx; font-weight: 800; color: #16244A; letter-spacing: 3rpx; }
+.intro {
+  margin-top: 24rpx; font-size: 28rpx; line-height: 1.95;
+  color: rgba(22,36,74,.72); letter-spacing: .5rpx; white-space: pre-wrap;
+}
+.ph { margin-top: 22rpx; font-size: 26rpx; color: rgba(22,36,74,.38); letter-spacing: 1rpx; }
+
+.row { display: flex; align-items: flex-start; padding: 26rpx 0; border-bottom: 2rpx solid #F0F3F9; }
+.row:last-child { border-bottom: none; }
+.row-l { width: 150rpx; flex-shrink: 0; font-size: 25rpx; color: rgba(22,36,74,.45); letter-spacing: 2rpx; padding-top: 4rpx; }
+.row-v { flex: 1; font-size: 29rpx; font-weight: 700; color: #16244A; text-align: right; word-break: break-all; }
+.row-v.wrap { line-height: 1.6; }
+
+.safe { height: 80rpx; }
