@@ -28,7 +28,7 @@
   position: relative; flex: 1; background: #FFFFFF;
   padding: 150rpx 40rpx 100rpx;
 }
-.g-dog { width: 210rpx; height: 220rpx; right: 36rpx; top: -110rpx; }
+.g-dog { width: 210rpx; height: 220rpx; right: 36rpx; top: -198rpx; }
 
 /* —— 左右并排 —— */
 .roles { display: flex; gap: 28rpx; position: relative; z-index: 3; }

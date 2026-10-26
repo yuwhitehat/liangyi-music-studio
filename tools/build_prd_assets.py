@@ -14,7 +14,7 @@ s.rect(0,0,W,170,fill=SKYL)
 s.ill('sun.png',514,84,76); s.ill('cloud.png',40,92,130)
 s.text(40,96,'LIANGYI MUSIC STUDIO',20,mix(COB,.55),True)
 s.rect(0,170,W,331,fill=COB); s.text(40,226,'两仪音乐',104,WHITE,True)
-s.ill('dog.png',504,391,210)                      # 骑跨色带交界，右侧
+s.ill('dog.png',504,303,210)                      # 骑跨色带交界，右侧
 by, bh, gap = 651, 300, 28
 bw = (W-80-gap)//2
 for i,(txt,bg) in enumerate([('我是老师',COB),('我是学员',TERRA)]):
