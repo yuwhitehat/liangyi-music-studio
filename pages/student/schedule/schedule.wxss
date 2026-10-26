@@ -1,5 +1,5 @@
 .nav { padding-bottom: 50rpx; }
-.nav-dog { width: 158rpx; height: 166rpx; right: 28rpx; bottom: -6rpx; opacity: .22; }
+.nav-dog { width: 220rpx; height: 114rpx; right: 24rpx; bottom: 0; opacity: .22; }
 .chips { margin-top: 32rpx; }
 .bk { display: flex; background: #FFFFFF; border-radius: 32rpx; margin: 0 40rpx 24rpx; overflow: hidden; }
 .bk-l { width: 140rpx; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }

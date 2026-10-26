@@ -1,5 +1,5 @@
 .nav { padding-bottom: 70rpx; }
-.pf-dog { width: 176rpx; height: 185rpx; right: 20rpx; bottom: -8rpx; opacity: .2; }
+.pf-dog { width: 240rpx; height: 125rpx; right: 16rpx; bottom: 0; opacity: .2; }
 .pf-cloud { width: 180rpx; height: 90rpx; top: 80rpx; right: 40rpx; opacity: .2; }
 .pf-row { display: flex; align-items: center; margin-top: 50rpx; position: relative; z-index: 2; }
 .pf-ava {

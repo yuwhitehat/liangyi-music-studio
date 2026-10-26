@@ -1,5 +1,5 @@
 .nav { padding-bottom: 50rpx; }
-.nav-dog { width: 158rpx; height: 166rpx; right: 28rpx; bottom: -6rpx; opacity: .22; }
+.nav-dog { width: 220rpx; height: 114rpx; right: 24rpx; bottom: 0; opacity: .22; }
 /* ── 筛选行 ── */
 .frow { display: flex; align-items: center; padding: 0 0 0 40rpx; }
 .frow:first-of-type { padding-top: 32rpx; }

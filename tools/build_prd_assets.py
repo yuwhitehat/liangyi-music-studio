@@ -14,7 +14,7 @@ s.rect(0,0,W,170,fill=SKYL)
 s.ill('sun.png',514,84,76); s.ill('cloud.png',40,92,130)
 s.text(40,96,'LIANGYI MUSIC STUDIO',20,mix(COB,.55),True)
 s.rect(0,170,W,331,fill=COB); s.text(40,226,'两仪音乐',104,WHITE,True)
-s.ill('dog.png',504,315,210)                      # 骑跨色带交界，右侧
+s.ill('dog.png',504,391,210)                      # 骑跨色带交界，右侧
 by, bh, gap = 651, 300, 28
 bw = (W-80-gap)//2
 for i,(txt,bg) in enumerate([('我是老师',COB),('我是学员',TERRA)]):
@@ -248,7 +248,7 @@ print("全部原型图生成完成")
 s=Screen(h=1820)
 s.rect(0,0,W,430,fill=COB)
 s.ill('cloud-w.png', W-40-180, 80, 180, alpha=.2)
-s.ill('dog-w.png',   W-20-176, 430-185-8, 176, alpha=.2)
+s.ill('dog-w.png',   W-16-240, 430-125, 240, alpha=.2)
 s.rect(40,215,120,120,fill=SKYL,r=100); s.text(100,276,'林',54,COB,True,anchor='mm')
 s.text(188,228,'林老师',48,WHITE,True); s.text(188,300,'老师 · 两仪音乐工作室',24,mix(WHITE,.65,COB))
 s.rect(0,430,W,s.h-430,fill=PAPER)
