@@ -5,7 +5,7 @@ Page({
   data: { studio: {}, rows: [] },
 
   onShow() {
-    const st = studio.get()
+    const st = studio.peek()
     const rows = []
     if (st.phone)   rows.push({ label: '电话', value: st.phone })
     if (st.wechat)  rows.push({ label: '微信', value: st.wechat })

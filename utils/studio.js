@@ -52,6 +52,15 @@ function get() {
   return DEFAULTS
 }
 
+/** 只读：不写缓存、不标脏（游客页用，避免给云端塞空默认值） */
+function peek() {
+  const saved = wx.getStorageSync(KEY)
+  if (!saved || saved.name === undefined) return Object.assign({}, DEFAULTS)
+  const out = {}
+  Object.keys(DEFAULTS).forEach(function (k) { out[k] = saved[k] === undefined ? DEFAULTS[k] : saved[k] })
+  return out
+}
+
 function save(data) {
   const name = (data.name || '').trim()
   if (!name) throw new Error('请填写工作室名称')
@@ -79,4 +88,4 @@ function incomplete() {
 
 function reset() { put(DEFAULTS); return DEFAULTS }
 
-module.exports = { get: get, save: save, incomplete: incomplete, reset: reset, DEFAULTS: DEFAULTS }
+module.exports = { get: get, peek: peek, save: save, incomplete: incomplete, reset: reset, DEFAULTS: DEFAULTS }
