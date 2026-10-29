@@ -10,7 +10,7 @@ Page({
     if (!app.can('editStudio')) {
       wx.showModal({
         title: '没有权限', content: '工作室资料仅超级管理员，或被授权的老师可编辑。',
-        showCancel: false, confirmText: '返回', confirmColor: '#2B3FA8',
+        showCancel: false, confirmText: '返回', confirmColor: '#111111',
         success: () => wx.navigateBack()
       })
       return

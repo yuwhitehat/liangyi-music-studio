@@ -6,10 +6,10 @@ const { LESSON_STATUS_TEXT, LESSON_STATUS_TAG } = require('../../../utils/consta
 const dialog = require('../../../utils/dialog.js')
 const quota = require('../../../utils/quota.js')
 
-const STRIPE = ['#2B3FA8', '#D9EAF5', '#1E2E7A', '#E8763A']
+const STRIPE = ['#111111', '#FFF3C4', '#4D8DFF', '#FF5FA2']
 const AVA = [
-  { bg: '#2B3FA8', fg: '#FFFFFF' }, { bg: '#E8763A', fg: '#FFFFFF' },
-  { bg: '#D9EAF5', fg: '#1E2E7A' }, { bg: '#1E2E7A', fg: '#FFFFFF' }
+  { bg: '#111111', fg: '#FFFFFF' }, { bg: '#FF5FA2', fg: '#FFFFFF' },
+  { bg: '#FFF3C4', fg: '#4D8DFF' }, { bg: '#4D8DFF', fg: '#FFFFFF' }
 ]
 
 const STATUS_FILTERS = [
@@ -32,7 +32,7 @@ function decorate(rows) {
     const c = STRIPE[i % STRIPE.length]
     return {
       ...l,
-      bg: c, fg: (c === '#D9EAF5' ? '#1E2E7A' : '#FFFFFF'),
+      bg: c, fg: (c === '#FFF3C4' ? '#4D8DFF' : '#FFFFFF'),
       // 双保险：即使数据源缺字段也能显示时间
       timeSlot: l.timeSlot || (l.timeStart + '–' + l.timeEnd),
       minutes: l.minutes || mins(l.timeStart, l.timeEnd),
@@ -135,7 +135,7 @@ Page({
     this.refresh()
     if (!res.ok) {
       dialog.show({ title: '无法签到', content: res.reason || '暂时无法签到',
-        showCancel: false, confirmText: '知道了', confirmColor: '#E8763A' })
+        showCancel: false, confirmText: '知道了', confirmColor: '#FF5FA2' })
       return
     }
     wx.showToast({ title: '已签到', icon: 'success' })
@@ -148,7 +148,7 @@ Page({
           content: over.map(function (o) {
             return o.name + '：报名 ' + o.total + ' 节，已上 ' + o.used + ' 节（超 ' + (o.used - o.total) + ' 节）'
           }).join('\n') + '\n\n记得给学员补充课时。',
-          showCancel: false, confirmText: '知道了', confirmColor: '#E8763A'
+          showCancel: false, confirmText: '知道了', confirmColor: '#FF5FA2'
         })
       }, 700)
     }
@@ -163,14 +163,14 @@ Page({
       content: ended
         ? '这节课已结束，取消后会保留学员名单并标记为「已取消」。'
         : '这节课还没上，取消后会释放为「待约」、清空学员，其他同学可以重新约。',
-      confirmText: '确认取消', confirmColor: '#E8763A',
+      confirmText: '确认取消', confirmColor: '#FF5FA2',
       success: (r) => {
         if (!r.confirm) return
         const res = lessons.cancel(id)
         this.refresh()
         if (!res.ok) {
           dialog.show({ title: '取消失败', content: res.reason || '暂时无法取消',
-            showCancel: false, confirmText: '知道了', confirmColor: '#E8763A' })
+            showCancel: false, confirmText: '知道了', confirmColor: '#FF5FA2' })
           return
         }
         wx.showToast({ title: res.released ? '已释放为待约' : '已取消', icon: 'success' })
@@ -182,7 +182,7 @@ Page({
     const id = e.currentTarget.dataset.id
     wx.showModal({
       title: '删除课程', content: '从课表中彻底删除这一节？',
-      confirmText: '删除', confirmColor: '#E8763A',
+      confirmText: '删除', confirmColor: '#FF5FA2',
       success: (r) => {
         if (!r.confirm) return
         lessons.remove(id); this.refresh()

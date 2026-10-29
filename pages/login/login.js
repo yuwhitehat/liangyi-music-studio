@@ -125,7 +125,7 @@ Page({
         content: '该手机号未登记为工作室老师。工作室老师由管理员添加，如需开通请联系工作室。',
         confirmText: '当学员',
         cancelText: '改号码',
-        confirmColor: '#2B3FA8',
+        confirmColor: '#111111',
         success: (r) => { if (r.confirm) this.setData({ step: 'studentName' }) }
       })
       return false

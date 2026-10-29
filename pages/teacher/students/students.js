@@ -4,8 +4,8 @@ const students = require('../../../utils/students.js')
 const dateUtil = require('../../../utils/date.js')
 
 const AVA = [
-  { bg: '#2B3FA8', fg: '#FFFFFF' }, { bg: '#E8763A', fg: '#FFFFFF' },
-  { bg: '#D9EAF5', fg: '#1E2E7A' }, { bg: '#1E2E7A', fg: '#FFFFFF' }
+  { bg: '#111111', fg: '#FFFFFF' }, { bg: '#FF5FA2', fg: '#FFFFFF' },
+  { bg: '#FFF3C4', fg: '#4D8DFF' }, { bg: '#4D8DFF', fg: '#FFFFFF' }
 ]
 
 function blank() {
@@ -124,7 +124,7 @@ Page({
       title: '删除学员',
       content: n ? '「' + name + '」关联着 ' + n + ' 节课，删除后课表里的名字仍会保留，但无法再约课。'
                  : '确定删除「' + name + '」吗？',
-      confirmText: '删除', confirmColor: '#E8763A',
+      confirmText: '删除', confirmColor: '#FF5FA2',
       success: (r) => {
         if (!r.confirm) return
         students.remove(id)

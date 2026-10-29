@@ -7,8 +7,8 @@ const dateUtil = require('../../../utils/date.js')
 const { DURATIONS } = require('../../../utils/constants.js')
 
 const AVA = [
-  { bg: '#2B3FA8', fg: '#FFFFFF' }, { bg: '#E8763A', fg: '#FFFFFF' },
-  { bg: '#D9EAF5', fg: '#1E2E7A' }, { bg: '#1E2E7A', fg: '#FFFFFF' }
+  { bg: '#111111', fg: '#FFFFFF' }, { bg: '#FF5FA2', fg: '#FFFFFF' },
+  { bg: '#FFF3C4', fg: '#4D8DFF' }, { bg: '#4D8DFF', fg: '#FFFFFF' }
 ]
 
 function toMin(hm) { const p = hm.split(':'); return parseInt(p[0], 10) * 60 + parseInt(p[1], 10) }
@@ -170,7 +170,7 @@ Page({
       wx.showModal({
         title: '时间冲突',
         content: '与 ' + hit.timeStart + '–' + hit.timeEnd + ' 的「' + hit.courseName + '」重叠，换个工作时间？',
-        showCancel: false, confirmText: '知道了', confirmColor: '#2B3FA8'
+        showCancel: false, confirmText: '知道了', confirmColor: '#111111'
       })
       return
     }

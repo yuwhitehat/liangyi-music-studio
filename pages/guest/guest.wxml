@@ -1,20 +1,20 @@
 <view class="page">
-  <view class="nav">
-    <view class="ill ill-dog-w nav-dog"></view>
+  <view class="nav hd-blue">
+    <view class="ill ill-dog-w hd-dog"></view>
     <view class="nav-back" bindtap="onBack"></view>
     <view class="nav-h1">工作室</view>
     <view class="nav-sub">{{studio.name || '两仪音乐工作室'}}</view>
   </view>
 
   <!-- 关于工作室：只展示老师填写的内容 -->
-  <view class="card">
+  <view class="card c-yellow">
     <view class="card-t">关于工作室</view>
     <view class="intro" wx:if="{{studio.intro}}">{{studio.intro}}</view>
     <view class="ph" wx:else>老师还没有填写工作室介绍</view>
   </view>
 
   <!-- 联系我们：只展示，不做复制等操作 -->
-  <view class="card">
+  <view class="card c-pink">
     <view class="card-t">联系我们</view>
     <block wx:if="{{rows.length > 0}}">
       <view class="row" wx:for="{{rows}}" wx:key="label">

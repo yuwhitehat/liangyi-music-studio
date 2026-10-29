@@ -1,8 +1,9 @@
 <view class="page">
-  <view class="nav">
+  <view class="nav hd-blue">
     <view class="nav-back" bindtap="goBack"></view>
     <view class="nav-h1">排课</view>
     <view class="nav-sub">选日期 · 选课程 · 定时间</view>
+    <view class="ill ill-dog-w hd-dog"></view>
   </view>
 
   <!-- 日期 -->
@@ -87,7 +88,7 @@
         <text class="bk-t">已有学员预约</text>
         <text class="bk-s">开启后可直接指定学员，无需等对方来约</text>
       </view>
-      <switch checked="{{hasBooking}}" color="#2B3FA8" bindchange="onToggleBooking" />
+      <switch checked="{{hasBooking}}" color="#111111" bindchange="onToggleBooking" />
     </view>
 
     <view class="bk-stu" wx:if="{{hasBooking}}">

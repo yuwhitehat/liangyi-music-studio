@@ -1,6 +1,6 @@
 <view class="page">
-  <view class="nav">
-    <view class="ill ill-dog-w nav-dog"></view>
+  <view class="nav hd-yellow">
+    <view class="ill ill-dog-w hd-dog"></view>
     <view class="nav-back" bindtap="goBack"></view>
     <view class="nav-h1">约课管理</view>
     <view class="nav-sub">签到 · 取消 · 查看名单</view>

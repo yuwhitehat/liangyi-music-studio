@@ -66,7 +66,7 @@ Page({
 
   onLogout() {
     wx.showModal({
-      title: '退出登录', content: '确定要退出登录吗？', confirmColor: '#2B3FA8',
+      title: '退出登录', content: '确定要退出登录吗？', confirmColor: '#111111',
       success: (r) => {
         if (!r.confirm) return
         app.signOut()          // 清掉 session，首页才不会自动跳回工作台

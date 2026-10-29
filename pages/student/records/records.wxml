@@ -1,6 +1,6 @@
 <view class="page">
-  <view class="nav">
-    <view class="ill ill-plant nav-plant"></view>
+  <view class="nav hd-pink">
+    <view class="ill ill-dog-w hd-dog"></view>
     <view class="nav-back" bindtap="goBack"></view>
     <view class="nav-h1">上课记录</view>
     <view class="nav-sub">一节一节攒起来的</view>

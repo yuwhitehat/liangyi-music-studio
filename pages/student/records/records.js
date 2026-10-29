@@ -5,7 +5,7 @@ const students = require('../../../utils/students.js')
 const dateUtil = require('../../../utils/date.js')
 const { LESSON_STATUS_TEXT, LESSON_STATUS_TAG } = require('../../../utils/constants.js')
 
-const BG = ['#2B3FA8', '#E8763A', '#1E2E7A', '#D9EAF5']
+const BG = ['#111111', '#FF5FA2', '#4D8DFF', '#FFF3C4']
 
 function md(d) {
   if (!d) return ''

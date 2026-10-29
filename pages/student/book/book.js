@@ -6,8 +6,8 @@ const cloudkit = require('../../../utils/cloudkit.js')
 const dateUtil = require('../../../utils/date.js')
 
 const BG = [
-  { bg: '#2B3FA8', fg: '#FFFFFF' }, { bg: '#D9EAF5', fg: '#1E2E7A' },
-  { bg: '#1E2E7A', fg: '#FFFFFF' }, { bg: '#E8763A', fg: '#FFFFFF' }
+  { bg: '#111111', fg: '#FFFFFF' }, { bg: '#FFF3C4', fg: '#4D8DFF' },
+  { bg: '#4D8DFF', fg: '#FFFFFF' }, { bg: '#FF5FA2', fg: '#FFFFFF' }
 ]
 
 Page({
@@ -44,12 +44,12 @@ Page({
     const sid = app.getStudentId()          // 自愈：旧 session 没有 sid 也能拿到
     if (!sid) {
       wx.showModal({ title: '请先登录', content: '没有取到你的学员身份，请退出后重新登录。',
-        showCancel: false, confirmText: '知道了', confirmColor: '#2B3FA8' })
+        showCancel: false, confirmText: '知道了', confirmColor: '#111111' })
       return
     }
     wx.showModal({
       title: '确认约课', content: '确定预约「' + name + '」这节课吗？',
-      confirmText: '约！', confirmColor: '#E8763A',
+      confirmText: '约！', confirmColor: '#FF5FA2',
       success: (r) => {
         if (!r.confirm) return
         const res = lessons.book(id, [{ id: sid, name: me.name || '我' }])
@@ -62,14 +62,14 @@ Page({
             cloudkit.bookRemote(id, 'add', me.name || '我').then(r => {
               if (!r.ok && !r.local) {
                 wx.showModal({ title: '同步失败', content: r.error || '请稍后重试',
-                  showCancel: false, confirmText: '知道了', confirmColor: '#E8763A' })
+                  showCancel: false, confirmText: '知道了', confirmColor: '#FF5FA2' })
               }
               cloudkit.pullAll().then(() => this.refresh())
             })
           }
         } else {
           wx.showModal({ title: '约课失败', content: res.reason || '这节课目前无法预约',
-            showCancel: false, confirmText: '知道了', confirmColor: '#E8763A' })
+            showCancel: false, confirmText: '知道了', confirmColor: '#FF5FA2' })
         }
       }
     })

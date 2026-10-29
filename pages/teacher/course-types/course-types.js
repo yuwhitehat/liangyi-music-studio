@@ -14,7 +14,7 @@ Page({
     if (!app.globalData.isSuperAdmin) {
       wx.showModal({
         title: '没有权限', content: '课程类型仅超级管理员可编辑。',
-        showCancel: false, confirmText: '返回', confirmColor: '#2B3FA8',
+        showCancel: false, confirmText: '返回', confirmColor: '#111111',
         success: () => wx.navigateBack()
       })
       return
@@ -81,7 +81,7 @@ Page({
     const { id, name } = e.currentTarget.dataset
     wx.showModal({
       title: '删除课程类型', content: '确定删除「' + name + '」吗？已排的课不受影响，但不能再新排该课程。',
-      confirmText: '删除', confirmColor: '#E8763A',
+      confirmText: '删除', confirmColor: '#FF5FA2',
       success: (r) => {
         if (!r.confirm) return
         courses.remove(id)
@@ -94,7 +94,7 @@ Page({
   onReset() {
     wx.showModal({
       title: '恢复默认', content: '将重置为钢琴 / 声乐 / 吉他 / 录音四门课，现有自定义类型会丢失。',
-      confirmText: '恢复', confirmColor: '#2B3FA8',
+      confirmText: '恢复', confirmColor: '#111111',
       success: (r) => {
         if (!r.confirm) return
         courses.reset(); this.refresh()

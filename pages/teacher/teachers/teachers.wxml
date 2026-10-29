@@ -1,6 +1,6 @@
 <view class="page">
-  <view class="nav">
-    <view class="ill ill-plant-w nav-plant"></view>
+  <view class="nav hd-pink">
+    <view class="ill ill-dog-w hd-dog"></view>
     <view class="nav-back" bindtap="goBack"></view>
     <view class="nav-h1">老师</view>
     <view class="nav-sub">{{list.length}} 位 · 仅超级管理员可管理</view>
@@ -59,7 +59,7 @@
           <text class="perm-n">{{item.t}}</text>
           <text class="perm-d">{{item.d}}</text>
         </view>
-        <switch checked="{{form.perms[item.k]}}" color="#2B3FA8" disabled="{{form.isSuperAdmin}}"
+        <switch checked="{{form.perms[item.k]}}" color="#111111" disabled="{{form.isSuperAdmin}}"
                 bindchange="onTogglePerm" data-k="{{item.k}}" />
       </view>
 
@@ -68,7 +68,7 @@
           <text class="perm-n">超级管理员</text>
           <text class="perm-d">可管理老师、课程类型与全部权限</text>
         </view>
-        <switch checked="{{form.isSuperAdmin}}" color="#E8763A" bindchange="onToggleSuper" />
+        <switch checked="{{form.isSuperAdmin}}" color="#C0392B" bindchange="onToggleSuper" />
       </view>
 
       <view class="perm-note" wx:if="{{form.isSuperAdmin}}">超级管理员默认拥有全部权限，无法单独收回</view>

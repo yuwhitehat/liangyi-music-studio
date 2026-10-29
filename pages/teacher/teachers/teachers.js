@@ -4,8 +4,8 @@ const teachers = require('../../../utils/teachers.js')
 const { PERMS } = require('../../../utils/constants.js')
 
 const AVA = [
-  { bg: '#2B3FA8', fg: '#FFFFFF' }, { bg: '#E8763A', fg: '#FFFFFF' },
-  { bg: '#D9EAF5', fg: '#1E2E7A' }, { bg: '#1E2E7A', fg: '#FFFFFF' }
+  { bg: '#111111', fg: '#FFFFFF' }, { bg: '#FF5FA2', fg: '#FFFFFF' },
+  { bg: '#FFF3C4', fg: '#4D8DFF' }, { bg: '#4D8DFF', fg: '#FFFFFF' }
 ]
 
 function labelOf(k) { return (PERMS.filter(p => p.k === k)[0] || {}).t || k }
@@ -22,7 +22,7 @@ Page({
     if (!app.globalData.isSuperAdmin) {
       wx.showModal({
         title: '没有权限', content: '老师名单仅超级管理员可查看与管理。',
-        showCancel: false, confirmText: '返回', confirmColor: '#2B3FA8',
+        showCancel: false, confirmText: '返回', confirmColor: '#111111',
         success: () => wx.navigateBack()
       })
       return

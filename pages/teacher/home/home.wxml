@@ -1,10 +1,10 @@
 <view class="page">
-  <view class="top">
+  <!-- 头部卡 = 「我的」入口（原「我的」按钮搬到这里） -->
+  <view class="top hd-yellow" bindtap="goProfile" hover-class="top-hover" hover-stay-time="90">
     <view class="top-h1">{{displayName}}</view>
     <view class="top-sub">{{todayText}} · {{stats.todayCount}} 节课 · {{stats.openCount}} 节待约</view>
   </view>
 
-  <!-- 功能入口：钴蓝 / 浅蓝 / 钴蓝 / 陶土橙，全部同尺寸 -->
   <view class="tiles">
     <view class="tile b-cobalt" bindtap="goSchedule" hover-class="tile-hover" hover-stay-time="90">
       <view class="tile-t">排课</view>
@@ -16,7 +16,8 @@
       <view class="ill ill-arrow-b tile-a"></view>
     </view>
 
-    <view class="tile b-cobalt" bindtap="goStudents" hover-class="tile-hover" hover-stay-time="90">
+    <!-- 非超管时只剩 3 块，让「学员」横铺补满网格 -->
+    <view class="tile b-cobalt {{isSuperAdmin ? '' : 'sp2'}}" bindtap="goStudents" hover-class="tile-hover" hover-stay-time="90">
       <view class="tile-t">学员</view>
       <view class="ill ill-arrow-w tile-a"></view>
     </view>
@@ -31,11 +32,6 @@
     <view class="tile b-terra" wx:if="{{isSuperAdmin}}" bindtap="goCourses" hover-class="tile-hover" hover-stay-time="90">
       <view class="tile-t">课程</view>
       <view class="ill ill-arrow-w tile-a"></view>
-    </view>
-
-    <view class="tile b-light" bindtap="goProfile" hover-class="tile-hover" hover-stay-time="90">
-      <view class="tile-t">我的</view>
-      <view class="ill ill-arrow-b tile-a"></view>
     </view>
   </view>
 

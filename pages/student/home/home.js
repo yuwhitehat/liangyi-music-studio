@@ -30,7 +30,7 @@ Page({
       .map((l, i) => ({
         ...l,
         friendlyDate: dateUtil.friendlyDate(l.date),
-        bg: ['#2B3FA8', '#E8763A', '#D9EAF5'][i % 3],
+        bg: ['#111111', '#FF5FA2', '#FFF3C4'][i % 3],
         ill: courses.byId(l.courseType).ill,
         statusText: LESSON_STATUS_TEXT[l.status], statusTag: LESSON_STATUS_TAG[l.status]
       }))

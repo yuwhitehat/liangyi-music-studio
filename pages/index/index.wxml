@@ -1,35 +1,38 @@
 <view class="home">
 
-  <!-- 淡天空蓝：窄带 -->
+  <!-- 方格纸上的云朵与太阳 -->
   <view class="band-sky">
     <view class="ill ill-sun sky-sun"></view>
     <view class="ill ill-cloud sky-cloud"></view>
-    <view class="sky-en">LIANGYI MUSIC STUDIO</view>
   </view>
 
-  <!-- 钴蓝主带 -->
+  <!-- 标题卡：白卡 + 黑描边 + 黄色错位硬影 -->
   <view class="band-cobalt">
-    <view class="brand-t">两仪音乐</view>
+    <view class="brand-pill">LIANGYI · 两仪</view>
+    <view class="brand-t">两仪</view>
+    <view class="brand-t">音乐</view>
+    <view class="spark sp1">+</view>
+    <view class="spark sp2">+</view>
+    <view class="spark sp3">+</view>
   </view>
 
-  <!-- 白色地面：约克夏在右侧 -->
+  <!-- 白色地面：两个贴纸按钮 -->
   <view class="band-white">
-    <view class="ill ill-dog g-dog"></view>
 
     <!-- 左右并排 · 实体按钮 -->
     <view class="roles">
       <view class="role r-cobalt" bindtap="onSelectRole" data-role="teacher" hover-class="role-hover" hover-stay-time="90">
         <view class="role-t">我是老师</view>
-        <view class="ill ill-arrow-w role-arrow"></view>
+        <view class="role-arrow-wrap"><view class="ill ill-arrow-b role-arrow"></view></view>
       </view>
 
       <view class="role r-terra" bindtap="onSelectRole" data-role="student" hover-class="role-hover" hover-stay-time="90">
         <view class="role-t">我是学员</view>
-        <view class="ill ill-arrow-w role-arrow"></view>
+        <view class="role-arrow-wrap"><view class="ill ill-arrow-b role-arrow"></view></view>
       </view>
     </view>
-  </view>
 
-  <!-- 游客入口：只读工作室介绍与联系方式 -->
-  <view class="guest-link" bindtap="onGuest">先随便看看 · 工作室介绍</view>
+    <!-- 游客入口：紧跟角色卡下方 -->
+    <view class="guest-link" bindtap="onGuest">先随便看看 · 工作室介绍</view>
+  </view>
 </view>

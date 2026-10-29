@@ -2,8 +2,8 @@
   "usingComponents": {},
   "navigationBarTitleText": "登录",
   "navigationStyle": "custom",
-  "backgroundColor": "#F6F8FC",
-  "backgroundColorTop": "#2B3FA8",
-  "backgroundColorBottom": "#F6F8FC",
+  "backgroundColor": "#F6F4EE",
+  "backgroundColorTop": "#FFF8DC",
+  "backgroundColorBottom": "#F6F4EE",
   "enablePullDownRefresh": false
 }

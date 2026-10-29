@@ -6,9 +6,6 @@
   </view>
 
   <view class="lg-form">
-    <!-- 约克夏：黑色线条，骑在钴蓝带与白色区交界（同首页） -->
-    <view class="ill ill-dog lg-dog"></view>
-
     <!-- 第一步：手机号 -->
     <block wx:if="{{step === 'phone'}}">
       <view class="field">
@@ -56,6 +53,6 @@
     </block>
 
     <view class="lg-home" bindtap="onGoHome">回到首页</view>
-    <view class="lg-guest" bindtap="onGuest">游客浏览 · 只看工作室信息</view>
+    <view class="lg-guest" bindtap="onGuest">游客浏览 · 看看工作室信息</view>
   </view>
 </view>
