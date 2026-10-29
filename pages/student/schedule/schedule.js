@@ -9,8 +9,8 @@ const cloudkit = require('../../../utils/cloudkit.js')
 const { LESSON_STATUS_TEXT, LESSON_STATUS_TAG } = require('../../../utils/constants.js')
 
 const BG = [
-  { bg: '#2B3FA8', fg: '#FFFFFF' }, { bg: '#E8763A', fg: '#FFFFFF' },
-  { bg: '#D9EAF5', fg: '#1E2E7A' }, { bg: '#1E2E7A', fg: '#FFFFFF' }
+  { bg: '#111111', fg: '#FFFFFF' }, { bg: '#FF5FA2', fg: '#FFFFFF' },
+  { bg: '#FFF3C4', fg: '#4D8DFF' }, { bg: '#4D8DFF', fg: '#FFFFFF' }
 ]
 
 const CANCEL_LIMIT = 6   // 距开课不足 6 小时不允许学员自行取消
@@ -34,14 +34,18 @@ Page({
     const today = dateUtil.formatDate(new Date())
     const list = lessons.all()
       .filter(l => (l.students || []).some(s => s && myKeys.indexOf(s.id) > -1))
-      .filter(l => tab === 'upcoming'
-        ? (l.status === 'booked' && l.date >= today)
-        : (l.status === 'completed' || l.status === 'cancelled' || (l.status === 'booked' && l.date < today)))
+      // 三个 tab 严格对应三个状态；已开课却没签到的课留在「待上课」里标逾期，不混进历史
+      .filter(l => tab === 'upcoming' ? l.status === 'booked'
+                   : tab === 'cancelled' ? l.status === 'cancelled'
+                   : l.status === 'completed')
       .sort((a, b) => tab === 'upcoming'
         ? ((a.date + a.timeStart) < (b.date + b.timeStart) ? -1 : 1)
         : ((a.date + a.timeStart) > (b.date + b.timeStart) ? -1 : 1))
       .map((l, i) => {
         const a = BG[i % BG.length]
+        const hours = (typeof dateUtil.hoursUntil === 'function')
+          ? dateUtil.hoursUntil(l.date, l.timeStart) : 9999
+        const overdue = l.status === 'booked' && hours <= 0
         return {
           ...l,
           dayLabel: l.date.slice(8),
@@ -49,11 +53,11 @@ Page({
           dateLabel: dateUtil.friendlyDate(l.date),
           bg: a.bg, fg: a.fg,
           isToday: l.date === today,
+          isOverdue: overdue,
           canCheckIn: lessons.canCheckIn(l).ok,
-          hoursLeft: (typeof dateUtil.hoursUntil === 'function')
-            ? Math.round(dateUtil.hoursUntil(l.date, l.timeStart) * 10) / 10
-            : 9999,
-          statusText: LESSON_STATUS_TEXT[l.status], statusTag: LESSON_STATUS_TAG[l.status]
+          hoursLeft: Math.round(hours * 10) / 10,
+          statusText: overdue ? '已逾期' : LESSON_STATUS_TEXT[l.status],
+          statusTag: overdue ? 't-over' : LESSON_STATUS_TAG[l.status]
         }
       })
     this.setData({ activeTab: tab, displayLessons: list })
@@ -65,17 +69,17 @@ Page({
   onSelfCheckIn(e) {
     const id = e.currentTarget.dataset.id
     wx.showModal({
-      title: '确认签到', content: '确认已到课并签到？', confirmText: '签到', confirmColor: '#2B3FA8',
+      title: '确认签到', content: '确认已到课并签到？', confirmText: '签到', confirmColor: '#111111',
       success: (r) => {
         if (!r.confirm) return
         const miss = need(lessons.completeByStudent, 'completeByStudent')
-        if (miss) { dialog.show({ title: '出错了', content: miss, showCancel: false, confirmColor: '#E8763A' }); return }
+        if (miss) { dialog.show({ title: '出错了', content: miss, showCancel: false, confirmColor: '#FF5FA2' }); return }
         const res = lessons.completeByStudent(id)
         this.show(this.data.activeTab)
         if (!res || typeof res.ok !== 'boolean') { this.show(this.data.activeTab); return }
         if (res.ok) wx.showToast({ title: '签到成功', icon: 'success' })
         else dialog.show({ title: '签到失败', content: res.reason || '暂时无法签到',
-          showCancel: false, confirmText: '知道了', confirmColor: '#E8763A' })
+          showCancel: false, confirmText: '知道了', confirmColor: '#FF5FA2' })
       }
     })
   },
@@ -93,11 +97,11 @@ Page({
     dialog.show({
       title: '取消课程',
       content: '确定取消「' + d.course + '」' + d.date + ' ' + d.time + ' 这节课吗？课程还没上，取消后名额会释放给其他同学。',
-      confirmText: '确认取消', confirmColor: '#E8763A',
+      confirmText: '确认取消', confirmColor: '#FF5FA2',
       success: (r) => {
         if (!r.confirm) return
         const miss = need(lessons.cancelByStudent, 'cancelByStudent')
-        if (miss) { dialog.show({ title: '出错了', content: miss, showCancel: false, confirmColor: '#E8763A' }); return }
+        if (miss) { dialog.show({ title: '出错了', content: miss, showCancel: false, confirmColor: '#FF5FA2' }); return }
         const res = lessons.cancelByStudent(d.id)
         this.show(this.data.activeTab)
         if (!res || typeof res.ok !== 'boolean') { this.show(this.data.activeTab); return }
@@ -108,14 +112,14 @@ Page({
             cloudkit.bookRemote(d.id, 'remove', me.name || '').then(r => {
               if (!r.ok && !r.local) {
                 dialog.show({ title: '同步失败', content: r.error || '请稍后重试',
-                  showCancel: false, confirmText: '知道了', confirmColor: '#E8763A' })
+                  showCancel: false, confirmText: '知道了', confirmColor: '#FF5FA2' })
               }
               cloudkit.pullAll().then(() => this.show(this.data.activeTab))
             })
           }
         }
         else dialog.show({ title: '取消失败', content: res.reason || '暂时无法取消',
-          showCancel: false, confirmText: '知道了', confirmColor: '#E8763A' })
+          showCancel: false, confirmText: '知道了', confirmColor: '#FF5FA2' })
       }
     })
   },
@@ -134,7 +138,7 @@ Page({
       cancelText: '知道了',
       confirmText: s.phone ? '复制电话' : '知道了',
       showCancel: !!s.phone,
-      confirmColor: '#E8763A',
+      confirmColor: '#FF5FA2',
       success: (r) => {
         if (r.confirm && s.phone) {
           wx.setClipboardData({ data: s.phone, success: () => wx.showToast({ title: '已复制老师电话', icon: 'none' }) })

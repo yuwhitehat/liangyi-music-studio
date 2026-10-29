@@ -1,6 +1,6 @@
 <view class="page">
-  <view class="nav">
-    <view class="ill ill-dog-w nav-dog"></view>
+  <view class="nav hd-yellow">
+    <view class="ill ill-dog-w hd-dog"></view>
     <view class="nav-back" bindtap="goBack"></view>
     <view class="nav-h1">我的课表</view>
     <view class="nav-sub">看看接下来要上什么</view>
@@ -8,7 +8,8 @@
 
   <view class="chips">
     <view class="chip {{activeTab === 'upcoming' ? 'on' : ''}}" bindtap="onTab" data-tab="upcoming">待上课</view>
-    <view class="chip {{activeTab === 'completed' ? 'on' : ''}}" bindtap="onTab" data-tab="completed">已结束</view>
+    <view class="chip {{activeTab === 'completed' ? 'on' : ''}}" bindtap="onTab" data-tab="completed">已完成</view>
+    <view class="chip {{activeTab === 'cancelled' ? 'on' : ''}}" bindtap="onTab" data-tab="cancelled">已取消</view>
   </view>
 
   <view class="bk" wx:for="{{displayLessons}}" wx:key="id">
@@ -23,10 +24,10 @@
       </view>
       <text class="bk-m">{{item.timeSlot}}</text>
 
-      <!-- 待上课且是今天：可签到；未取消未完成的课都可申请取消（取消受 6 小时限制） -->
+      <!-- 签到：当天或已开课的课都可签（含逾期补签）；取消：仅开课前的课，已开课后不再提供入口 -->
       <view class="acts" wx:if="{{item.status === 'booked'}}">
         <view class="ab ab-main" wx:if="{{item.canCheckIn}}" bindtap="onSelfCheckIn" data-id="{{item.id}}">签到</view>
-        <view class="ab" bindtap="onSelfCancel" data-id="{{item.id}}" data-hours="{{item.hoursLeft}}"
+        <view class="ab" wx:if="{{!item.isOverdue}}" bindtap="onSelfCancel" data-id="{{item.id}}" data-hours="{{item.hoursLeft}}"
               data-course="{{item.courseName}}" data-time="{{item.timeSlot}}" data-date="{{item.dateLabel}}">
           取消课程
         </view>
@@ -36,7 +37,7 @@
 
   <view class="empty" wx:if="{{displayLessons.length === 0}}">
     <view class="empty-c"></view>
-    <view class="empty-t">{{activeTab === 'upcoming' ? '还没有待上的课' : '还没有已结束的课'}}</view>
+    <view class="empty-t">{{activeTab === 'upcoming' ? '还没有待上的课' : activeTab === 'completed' ? '还没有已完成的课' : '还没有已取消的课'}}</view>
   </view>
   <view style="height:60rpx"></view>
 </view>
