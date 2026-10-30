@@ -6,19 +6,25 @@
     <view class="nav-sub">挑一个喜欢的时段</view>
   </view>
 
-  <view class="sec"><text class="sec-t">课程</text></view>
-  <scroll-view scroll-x class="hscroll">
+  <view class="sec"><text class="sec-t">我报的课</text><text class="sec-n">{{enrolled.length}}</text></view>
+  <scroll-view scroll-x class="hscroll" wx:if="{{!noEnroll}}">
     <view class="hrow">
       <view class="chip {{selectedCourseType === '' ? 'on' : ''}}" bindtap="onSelectCourse" data-id="">全部</view>
-      <view class="chip {{selectedCourseType === c.id ? 'on' : ''}}"
-            wx:for="{{courseTypes}}" wx:for-item="c" wx:key="id"
-            bindtap="onSelectCourse" data-id="{{c.id}}">{{c.icon}} {{c.name}}</view>
+      <view class="chip {{selectedCourseType === c.id ? 'on' : ''}} {{c.over ? 'bad' : ''}}"
+            wx:for="{{enrolled}}" wx:for-item="c" wx:key="id"
+            bindtap="onSelectCourse" data-id="{{c.id}}">{{c.name}} · {{c.over ? '超' + (0 - c.remain) : (c.hasTotal ? '剩' + c.remain : '未填')}}</view>
     </view>
   </scroll-view>
 
-  <view class="sec"><text class="sec-t">可约时段</text><text class="sec-n">{{shownCount}}</text></view>
+  <view class="sec" wx:if="{{!noEnroll}}"><text class="sec-t">可约时段</text><text class="sec-n">{{shownCount}}</text></view>
 
-  <block wx:if="{{shownCount > 0}}">
+  <block wx:if="{{noEnroll}}">
+    <view class="no-enroll">
+      <view class="ne-t">老师还没给你登记报名课程</view>
+      <view class="ne-d">课时是按课程算的 —— 老师在你名下报好一门课，这里就会出现那门课的可约时段。</view>
+    </view>
+  </block>
+  <block wx:elif="{{shownCount > 0}}">
     <view class="bk" wx:for="{{shownLessons}}" wx:key="id">
       <view class="bk-l" style="background:{{item.bg}};color:{{item.fg}}">
         <text class="bk-d1">{{item.dayNum}}</text>
@@ -30,8 +36,10 @@
           <view class="bk-t">{{item.courseName}}</view>
         </view>
         <view class="bk-m">{{item.timeSlot}} · {{item.friendlyDate}}</view>
+        <view class="bk-over" wx:if="{{item.over}}">这门课已超 {{item.overBy}} 节 · 约不了，先联系老师补课时</view>
       </view>
-      <view class="bk-go" bindtap="onBook" data-id="{{item.id}}" data-name="{{item.courseName}}">约</view>
+      <view class="bk-go {{item.over ? 'off' : ''}}" bindtap="onBook" data-id="{{item.id}}"
+            data-name="{{item.courseName}}" data-type="{{item.courseType}}">约</view>
     </view>
   </block>
   <view class="empty" wx:else>

@@ -1,6 +1,8 @@
-// teacher/students/students.js — 学员名册：增改删 + 课时/报名日期录入
+// teacher/students/students.js — 学员名册：资料增改删 + 按课程登记报名与课时
 const lessons = require('../../../utils/lessons.js')
 const students = require('../../../utils/students.js')
+const courses = require('../../../utils/courses.js')
+const quota = require('../../../utils/quota.js')
 const dateUtil = require('../../../utils/date.js')
 
 const AVA = [
@@ -8,50 +10,55 @@ const AVA = [
   { bg: '#FFF3C4', fg: '#4D8DFF' }, { bg: '#4D8DFF', fg: '#FFFFFF' }
 ]
 
-function blank() {
-  return { name: '', phone: '', note: '', totalLessons: '', doneBefore: '', enrollStart: '', enrollEnd: '' }
+function blank() { return { name: '', phone: '', note: '' } }
+
+/** 报名周期 → 「3月1日 → 12月31日 · 剩 62 天」；没填就是未填 */
+function md(d) { return d ? parseInt(d.slice(5, 7), 10) + '月' + parseInt(d.slice(8, 10), 10) + '日' : '' }
+function spanOf(q) {
+  if (q.start && q.end) return md(q.start) + ' → ' + md(q.end)
+  if (q.start) return md(q.start) + ' 开始'
+  if (q.end) return '至 ' + md(q.end)
+  return '未填周期'
+}
+function daysLeft(q) {
+  if (!q.end) return -1
+  const today = dateUtil.formatDate(new Date())
+  if (q.end < today) return -1
+  return Math.round((new Date(q.end) - new Date(today)) / 86400000)
 }
 
 Page({
   data: {
-    keyword: '', students: [], filteredStudents: [],
-    showForm: false, editingId: '', form: blank()
+    keyword: '', students: [], filteredStudents: [], enrollTotal: 0,
+    showForm: false, editingId: '', form: blank(), formCourses: [],
+    showEnroll: false, enrollId: '', enrollName: '', enrollIsNew: false,
+    enrollForm: { courseType: '', totalLessons: '', doneBefore: '', start: '', end: '' },
+    enrollTypes: [], enrollCourseName: '', live: null
   },
 
   onShow() { this.refresh() },
 
   refresh() {
-    const today = dateUtil.formatDate(new Date())
-    const rows = lessons.all()
-
     const all = students.list().map((s, i) => {
-      const mine = rows.filter(l => (l.students || []).some(x => x.id === s.id))
-      // 系统内已完成的课，累加到「已上」上（录入的是上线前的历史节数，两者不重叠）
-      const inAppDone = mine.filter(l => l.status === 'completed').length
-      const done = (s.doneBefore || 0) + inAppDone   // 展示用：基线 + 本小程序内完成
-      const total = s.totalLessons || 0
       const a = AVA[i % AVA.length]
+      // 课时按门记：每门课各算各的，人和人之间不合并
+      const rows = quota.enrollmentsOf(s.id).map(q => ({
+        ...q,
+        span: spanOf(q),
+        days: daysLeft(q)
+      }))
       return {
         ...s, bg: a.bg, fg: a.fg,
-        done: done,
-        inAppDone: inAppDone,
-        totalLessons: total,
-        // 不用 Math.max 吞掉超支：老师要能一眼看到谁上超了
-        remain: total - done,
-        over: total > 0 && done > total,
-        overBy: (total > 0 && done > total) ? done - total : 0,
-        pct: total ? Math.min(100, Math.round(done / total * 100)) : 0
+        rows: rows,
+        courseCount: rows.length,
+        overCount: rows.filter(q => q.over).length
       }
     })
-    this.setData({ students: all, filteredStudents: this.applyKw(all) })
-  },
-
-  /** 该学员在本小程序内已完成的课数（用于把「总已上」换算回基线） */
-  inAppOf(id) {
-    if (!id) return 0
-    return lessons.all().filter(l =>
-      l.status === 'completed' && (l.students || []).some(x => x && x.id === id)
-    ).length
+    this.setData({
+      students: all,
+      filteredStudents: this.applyKw(all),
+      enrollTotal: all.reduce((n, s) => n + s.courseCount, 0)
+    })
   },
 
   applyKw(rows) {
@@ -60,75 +67,198 @@ Page({
   },
   onSearch(e) { this.setData({ keyword: e.detail.value }, () => this.refresh()) },
 
+  /* ── 学员资料 ── */
   onIn(e) { this.setData({ ['form.' + e.currentTarget.dataset.k]: e.detail.value }) },
 
-  /** 节数输入：只留数字 */
-  onNum(e) {
-    const v = (e.detail.value || '').replace(/\D/g, '')
-    this.setData({ ['form.' + e.currentTarget.dataset.k]: v })
-  },
-
-  onDate(e) { this.setData({ ['form.' + e.currentTarget.dataset.k]: e.detail.value }) },
-  onClearDates() { this.setData({ 'form.enrollStart': '', 'form.enrollEnd': '' }) },
-
-  onOpenAdd() { this.setData({ showForm: true, editingId: '', form: blank() }) },
+  onOpenAdd() { this.setData({ showForm: true, editingId: '', form: blank(), formCourses: [] }) },
 
   onEdit(e) {
-    const s = this.data.students.filter(x => x.id === e.currentTarget.dataset.id)[0]
+    const s = this.pick(e.currentTarget.dataset.id)
     if (!s) return
     this.setData({
       showForm: true, editingId: s.id,
-      form: {
-        name: s.name, phone: s.phone || '', note: s.note || '',
-        totalLessons: s.totalLessons ? String(s.totalLessons) : '',
-        // 表单里让老师填的是「一共上了几节」，存的时候换算成基线，
-        // 否则老师填 10、系统内又有 4 节完成的，展示就会跳到 14
-        doneBefore: String(s.done || 0),
-        enrollStart: s.enrollStart || '', enrollEnd: s.enrollEnd || ''
-      }
+      form: { name: s.name, phone: s.phone || '', note: s.note || '' },
+      formCourses: s.rows
     })
   },
 
+  pick(id) { return this.data.students.filter(x => x.id === id)[0] || null },
   onCloseForm() { this.setData({ showForm: false, editingId: '' }) },
 
-  onSubmit() {
+  /** 资料落库：返回该学员的 id；校验没过返回 false（已弹提示） */
+  commitForm() {
     const f = this.data.form
-    const total = parseInt(f.totalLessons, 10) || 0
-    const totalDone = parseInt(f.doneBefore, 10) || 0
-    const inApp = this.inAppOf(this.data.editingId)
-    if (total && totalDone > total) {
-      wx.showToast({ title: '已上不能大于共报', icon: 'none' }); return
-    }
-    const payload = {
-      name: f.name, phone: f.phone, note: f.note,
-      totalLessons: total,
-      doneBefore: Math.max(0, totalDone - inApp),   // 存基线：总已上 − 系统内已完成
-      enrollStart: f.enrollStart, enrollEnd: f.enrollEnd
-    }
     try {
-      if (this.data.editingId) students.update(this.data.editingId, payload)
-      else students.add(payload)
+      if (this.data.editingId) { students.update(this.data.editingId, f); return this.data.editingId }
+      students.add(f)
+      const hit = students.list().filter(function (r) { return r.name === (f.name || '').trim() })[0]
+      return hit ? hit.id : false
     } catch (err) {
-      wx.showToast({ title: err.message || '保存失败', icon: 'none' }); return
+      wx.showToast({ title: err.message || '保存失败', icon: 'none' })
+      return false
     }
-    this.setData({ showForm: false, editingId: '' })
+  },
+
+  onSubmit() {
+    if (this.commitForm() === false) return
+    this.onCloseForm()
     this.refresh()
     wx.showToast({ title: '已保存', icon: 'success' })
+  },
+
+  /** 新增学员：存完直接接着报第一门课，省老师回头再点一次 */
+  onSubmitAndEnroll() {
+    const id = this.commitForm()
+    if (id === false) return
+    this.onCloseForm()
+    this.refresh()
+    if (id) this.openEnroll(id, '')
   },
 
   onRemove() {
     const id = this.data.editingId
     const name = this.data.form.name
     const n = lessons.all().filter(l => (l.students || []).some(s => s.id === id)).length
+    const m = (this.pick(id) || {}).courseCount || 0
     wx.showModal({
       title: '删除学员',
-      content: n ? '「' + name + '」关联着 ' + n + ' 节课，删除后课表里的名字仍会保留，但无法再约课。'
-                 : '确定删除「' + name + '」吗？',
+      content: '「' + name + '」已报 ' + m + ' 门课'
+        + (n ? '、关联 ' + n + ' 节课。' : '。')
+        + '删除后课表里的名字仍会保留，但无法再约课。',
       confirmText: '删除', confirmColor: '#FF5FA2',
       success: (r) => {
         if (!r.confirm) return
         students.remove(id)
         this.setData({ showForm: false, editingId: '' })
+        this.refresh()
+        wx.showToast({ title: '已删除', icon: 'none' })
+      }
+    })
+  },
+
+  /* ── 一门课的报名 ── */
+  /** 课程行的 data-type 有值就是改那条，没有（点「+ 加一门课」）就是新增 */
+  onEnrollTap(e) {
+    this.openEnroll(e.currentTarget.dataset.id, e.currentTarget.dataset.type || '')
+  },
+
+  /** 从资料弹层里点某门课 / 加一门课：先把资料存了再进报名，免得回来重存 */
+  onFormCourse(e) { this.formToEnroll(e.currentTarget.dataset.type) },
+  onFormAddEnroll() { this.formToEnroll('') },
+  formToEnroll(type) {
+    const id = this.data.editingId
+    if (!id) return
+    if (this.commitForm() === false) return
+    this.onCloseForm()
+    this.refresh()
+    this.openEnroll(id, type)
+  },
+
+  /** 课程类型胶囊：同一门课只能有一条报名，已报的置灰 */
+  buildTypes(sid, picked) {
+    const mine = students.enrollments(sid)
+    return courses.list().map(function (c) {
+      return {
+        id: c.id, name: c.name,
+        taken: mine.some(function (e) { return e.courseType === c.id }) && c.id !== picked,
+        cur: c.id === picked
+      }
+    })
+  },
+
+  openEnroll(sid, courseType) {
+    const s = this.pick(sid) || students.byId(sid) || {}
+    const e = courseType ? students.enrollment(sid, courseType) : null
+    const type = e ? e.courseType : (courseType || '')
+    this.setData({
+      showEnroll: true, enrollId: sid, enrollName: s.name || '', enrollIsNew: !e,
+      enrollTypes: this.buildTypes(sid, type),
+      enrollCourseName: type ? courses.byId(type).name : '',
+      enrollForm: e
+        ? { courseType: type, totalLessons: String(e.totalLessons || ''),
+            // 表单里让老师填「一共上了几节」，存的时候才换算回基线
+            doneBefore: String((e.doneBefore || 0) + quota.doneInApp(sid, type)),
+            start: e.start || '', end: e.end || '' }
+        : { courseType: type, totalLessons: '', doneBefore: '', start: '', end: '' }
+    }, () => this.syncLive())
+  },
+
+  onCloseEnroll() { this.setData({ showEnroll: false }) },
+
+  onPickType(e) {
+    // 编辑已有报名时类型锁死：换课要先删掉这条再新增，否则「同一门课只留一条」会被绕开
+    if (!this.data.enrollIsNew) return
+    const { id: type, taken } = e.currentTarget.dataset
+    if (taken === '1') { wx.showToast({ title: '这门课已经报过了', icon: 'none' }); return }
+    if (type === this.data.enrollForm.courseType) return
+    // 换类型时把「已上」按新那门课重算：各门课系统内完成的节数不一样
+    this.setData({
+      'enrollForm.courseType': type,
+      enrollCourseName: courses.byId(type).name,
+      enrollTypes: this.buildTypes(this.data.enrollId, type),
+      'enrollForm.doneBefore': String(quota.doneInApp(this.data.enrollId, type))
+    }, () => this.syncLive())
+  },
+
+  onEnrollNum(e) {
+    this.setData({ ['enrollForm.' + e.currentTarget.dataset.k]: (e.detail.value || '').replace(/\D/g, '') },
+      () => this.syncLive())
+  },
+  onEnrollDate(e) { this.setData({ ['enrollForm.' + e.currentTarget.dataset.k]: e.detail.value }) },
+  onClearDates() { this.setData({ 'enrollForm.start': '', 'enrollForm.end': '' }) },
+
+  /** 实时算给老师看：剩余 = 共报 −（基线 + 系统内）；WXML 不能调方法，得塞进 data */
+  syncLive() {
+    const f = this.data.enrollForm
+    const total = parseInt(f.totalLessons, 10) || 0
+    const done = parseInt(f.doneBefore, 10) || 0
+    this.setData({
+      live: {
+        has: !!f.courseType,
+        total: total, done: done, remain: total - done,
+        overBy: total > 0 && done > total ? done - total : 0,
+        inApp: quota.doneInApp(this.data.enrollId, f.courseType)
+      }
+    })
+  },
+
+  onSubmitEnroll() {
+    const f = this.data.enrollForm
+    if (!f.courseType) { wx.showToast({ title: '请选择课程类型', icon: 'none' }); return }
+    const total = parseInt(f.totalLessons, 10) || 0
+    const done = parseInt(f.doneBefore, 10) || 0
+    if (total && done > total) { wx.showToast({ title: '已上不能大于共报', icon: 'none' }); return }
+    try {
+      students.setEnrollment(this.data.enrollId, {
+        courseType: f.courseType, totalLessons: f.totalLessons,
+        // 老师填的是「一共上了几节」，存的时候减去这门课系统内完成的节数换算成基线
+        doneBefore: Math.max(0, done - quota.doneInApp(this.data.enrollId, f.courseType)),
+        start: f.start, end: f.end
+      })
+    } catch (err) {
+      wx.showToast({ title: err.message || '保存失败', icon: 'none' }); return
+    }
+    this.setData({ showEnroll: false })
+    this.refresh()
+    wx.showToast({ title: '已保存', icon: 'success' })
+  },
+
+  onRemoveEnroll() {
+    const f = this.data.enrollForm
+    const name = courses.byId(f.courseType).name
+    const id = this.data.enrollId
+    const n = lessons.all().filter(l =>
+      l.courseType === f.courseType && (l.students || []).some(s => s.id === id)).length
+    wx.showModal({
+      title: '删掉这门课',
+      content: '「' + this.data.enrollName + '」的' + name + '报名连同课时一起删除'
+        + (n ? '；课表里 ' + n + ' 节' + name + '课仍会保留记录，只是不再计入课时。' : '。'),
+      confirmText: '删除', confirmColor: '#FF5FA2',
+      success: (r) => {
+        if (!r.confirm) return
+        try { students.removeEnrollment(id, f.courseType) }
+        catch (err) { wx.showToast({ title: err.message || '删除失败', icon: 'none' }); return }
+        this.setData({ showEnroll: false })
         this.refresh()
         wx.showToast({ title: '已删除', icon: 'none' })
       }

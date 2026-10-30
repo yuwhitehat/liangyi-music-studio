@@ -283,9 +283,24 @@ function canCheckIn(l) {
   return { ok: true }
 }
 
-/** 是否已过结束时间（决定取消后是「保留名单」还是「释放为待约」） */
-function hasEnded(l) {
-  return !!l && dateUtil.hoursUntil(l.date, l.timeEnd) <= 0
+/** 是否已过上课开始时间（决定取消后是「保留名单」还是「释放为待约」） */
+function hasStarted(l) {
+  return !!l && dateUtil.hoursUntil(l.date, l.timeStart) <= 0
+}
+
+/**
+ * 这节课是否计入学员的「已上」课时。三端（课时汇总 / 学员管理 / 上课记录）都走这里，
+ * 避免同一个数字在三处算出三个值。
+ *  - 已签到（completed）
+ *  - 老师取消时选了「扣课时」的已取消课
+ * keys 传该学员的全部身份键（sid / openid / p_手机号），单个 id 就传 [sid]。
+ * courseType 传了就只算那一门课的报名 —— 课时是按门记的，不能跨课程混。
+ */
+function countsAsDone(l, keys, courseType) {
+  if (!l || !keys || !keys.length) return false
+  if (courseType && l.courseType !== courseType) return false
+  if (l.status !== 'completed' && !(l.status === 'cancelled' && l.cancelCharge)) return false
+  return (l.students || []).some(function (s) { return s && keys.indexOf(s.id) > -1 })
 }
 
 function complete(id) {
@@ -297,24 +312,37 @@ function complete(id) {
 }
 
 /**
- * 取消课程，按「是否已过结束时间」分两种结果：
- *  - 已下课：保留学员名单，标记 cancelled（历史要能查是谁上的）
- *  - 未下课：释放为待约（清掉学员），这节课重新开放给别人约
+ * 取消课程，老师可决定是否同时扣学员课时（charge）。两种结果：
+ *  - 释放为待约：清掉学员，这节课重新开放给别人约 —— 只有「未到开始时间且不扣课时」才成立
+ *  - 保留名单：标记 cancelled 并留住学员，扣了课时就记在名单上
+ * 未到开始时间但老师选了「扣」时不释放：课时要记在名单上，名单清空就没得可扣了。
  */
-function cancel(id) {
+function cancel(id, charge) {
   const l = find(id)
   if (!l) return { ok: false, reason: '课程不存在' }
   if (l.status === 'cancelled') return { ok: false, reason: '这节课已经取消过了' }
   if (l.status === 'completed') return { ok: false, reason: '这节课已完成，无法取消' }
 
-  const ended = dateUtil.hoursUntil(l.date, l.timeEnd) <= 0
+  const started = hasStarted(l)
+  const release = !started && !charge
   save(list().map(function (x) {
     if (x.id !== id) return x
-    return ended
-      ? { ...x, status: 'cancelled' }                                  // 保留 students
-      : { ...x, status: 'available', booked: false, students: [] }     // 释放
+    return release
+      ? { ...x, status: 'available', booked: false, students: [] }      // 释放
+      : { ...x, status: 'cancelled', cancelCharge: !!charge }           // 保留 students
   }))
-  return { ok: true, released: !ended }
+  return { ok: true, released: release, charged: !!charge }
+}
+
+/** 事后修改「这节课是否扣课时」，只对已取消的课开放 */
+function setCharge(id, charge) {
+  const l = find(id)
+  if (!l) return { ok: false, reason: '课程不存在' }
+  if (l.status !== 'cancelled') return { ok: false, reason: '只有已取消的课能改扣课时' }
+  save(list().map(function (x) {
+    return x.id === id ? { ...x, cancelCharge: !!charge } : x
+  }))
+  return { ok: true, charged: !!charge }
 }
 
 function remove(id) { return save(list().filter(function (l) { return l.id !== id })) }
@@ -346,7 +374,8 @@ module.exports = {
   book: book, unbook: unbook, complete: complete, cancel: cancel, remove: remove,
   completeByStudent: completeByStudent, cancelByStudent: cancelByStudent,
   CANCEL_LIMIT_HOURS: CANCEL_LIMIT_HOURS,
-  canCheckIn: canCheckIn, hasEnded: hasEnded,
+  canCheckIn: canCheckIn, hasStarted: hasStarted, countsAsDone: countsAsDone,
+  setCharge: setCharge,
   upcoming: upcoming, stats: stats, reset: reset,
   overlap: overlap, timeCross: timeCross, studentClash: studentClash, expand: expand
 }

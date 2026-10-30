@@ -55,7 +55,8 @@ exports.main = async function (event) {
             data: {
               id: 's' + Date.now().toString(36),
               name: event.name, phone: out.phone, note: '自助注册',
-              totalLessons: 0, doneBefore: 0, enrollStart: '', enrollEnd: ''
+              // 课时按门记在报名里，新学员还没报任何课；等老师在学员管理里加
+              enrollments: []
             }
           })
           out.refId = add._id

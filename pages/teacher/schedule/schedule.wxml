@@ -102,6 +102,11 @@
           <text class="bk-tag-x" catchtap="onDropStudent" data-id="{{item.id}}">✕</text>
         </view>
       </view>
+      <view class="pick-warn" wx:if="{{pickWarn.length}}">
+        <view class="pw-t">这 {{pickWarn.length}} 位要注意</view>
+        <view class="pw-l" wx:for="{{pickWarn}}" wx:key="id">{{item.text}}</view>
+        <view class="pw-d">照常排入，课时会记成负数 · 记得补课时或改报名。</view>
+      </view>
     </view>
 
     <button class="btn btn-cobalt btn-add" bindtap="onAddSlot">+ 添加这个时段</button>
@@ -150,7 +155,7 @@
   <view class="mask" wx:if="{{showPicker}}" bindtap="onClosePicker"></view>
   <view class="sheet" wx:if="{{showPicker}}">
     <view class="sheet-h">
-      <text class="sheet-t">选择学员</text>
+      <text class="sheet-t">选学员 · {{selectedCourseName}}</text>
       <text class="sheet-x" bindtap="onClosePicker">✕</text>
     </view>
     <input class="field-i" placeholder="搜索学员姓名" bindinput="onSearchStudent" value="{{keyword}}" />
@@ -158,8 +163,8 @@
       <view class="pk-row" wx:for="{{pickerList}}" wx:key="id" bindtap="onToggleStudent" data-id="{{item.id}}">
         <view class="pk-ava" style="background:{{item.bg}};color:{{item.fg}}">{{item.name[0]}}</view>
         <view class="pk-b">
-          <view class="pk-n">{{item.name}}</view>
-          <view class="pk-s">{{item.note ? item.note : '未备注'}}</view>
+          <view class="pk-n">{{item.name}}<text class="pk-warn" wx:if="{{item.over}}">已超支</text><text class="pk-nb" wx:if="{{item.notEnrolled}}">未报本课</text></view>
+          <view class="pk-s">{{item.sub}}</view>
         </view>
         <view class="pk-box {{item.checked ? 'on' : ''}}">{{item.checked ? '✓' : ''}}</view>
       </view>

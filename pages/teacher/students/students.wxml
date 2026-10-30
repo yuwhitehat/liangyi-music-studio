@@ -3,7 +3,7 @@
     <view class="ill ill-dog-w hd-dog"></view>
     <view class="nav-back" bindtap="goBack"></view>
     <view class="nav-h1">学员</view>
-    <view class="nav-sub">共 {{students.length}} 位同学</view>
+    <view class="nav-sub">共 {{students.length}} 位同学 · {{enrollTotal}} 门报名</view>
   </view>
 
   <view class="srch">
@@ -12,14 +12,38 @@
   </view>
 
   <block wx:if="{{filteredStudents.length > 0}}">
-    <view class="item" wx:for="{{filteredStudents}}" wx:key="id" bindtap="onEdit" data-id="{{item.id}}">
-      <view class="st-ava" style="background:{{item.bg}};color:{{item.fg}}">{{item.name[0]}}</view>
-      <view class="item-b">
-        <view class="item-t">{{item.name}}</view>
-        <view class="item-s">共报 {{item.totalLessons}} 节课 · 已上 {{item.done}} 节课</view>
-        <view class="item-over" wx:if="{{item.over}}">已超 {{item.overBy}} 节</view>
+    <view class="st-card" wx:for="{{filteredStudents}}" wx:key="id">
+      <!-- 头部：点进资料弹层 -->
+      <view class="st-hd" bindtap="onEdit" data-id="{{item.id}}">
+        <view class="st-ava" style="background:{{item.bg}};color:{{item.fg}}">{{item.name[0]}}</view>
+        <view class="st-b">
+          <view class="item-t">{{item.name}}</view>
+          <view class="item-s">{{item.phone ? item.phone : '未填手机号'}}{{item.note ? ' · ' + item.note : ''}}</view>
+        </view>
+        <view class="st-cnt">
+          <text class="st-cnt-n">{{item.courseCount}}</text>
+          <text class="st-cnt-l">门课</text>
+        </view>
+        <view class="st-go">›</view>
       </view>
-      <view class="st-go">›</view>
+
+      <block wx:if="{{item.rows.length > 0}}">
+        <view class="st-cut"></view>
+        <view class="st-row" wx:for="{{item.rows}}" wx:for-item="q" wx:key="courseType"
+              bindtap="onEnrollTap" data-id="{{item.id}}" data-type="{{q.courseType}}">
+          <view class="sr1">
+            <text class="st-cn">{{q.courseName}}</text>
+            <text class="st-rm {{q.over ? 'neg' : ''}}">{{q.over ? '超 ' + q.overBy + ' 节' : (q.hasTotal ? '剩 ' + q.remain + ' 节' : '未填课时')}}</text>
+          </view>
+          <view class="sr2">
+            <text class="st-num">共报 {{q.total}} · 已上 {{q.used}}</text>
+            <text class="st-pd">{{q.span}}{{q.days >= 0 ? ' · 剩 ' + q.days + ' 天' : ''}}</text>
+          </view>
+        </view>
+      </block>
+      <view class="st-none" wx:else>还没有报名课程</view>
+
+      <view class="st-add" bindtap="onEnrollTap" data-id="{{item.id}}">+ 加一门课</view>
     </view>
   </block>
   <view class="empty" wx:else>
@@ -27,11 +51,13 @@
     <view class="empty-t">{{keyword ? '没有找到这位同学' : '还没有学员，点右上角 + 添加'}}</view>
   </view>
 
-  <!-- 添加 / 编辑弹层 -->
+  <view style="height:60rpx"></view>
+
+  <!-- 学员资料弹层：课时和周期都在课程里，这里只管身份 -->
   <view class="mask" wx:if="{{showForm}}" bindtap="onCloseForm"></view>
   <view class="sheet" wx:if="{{showForm}}">
     <view class="sheet-h">
-      <text class="sheet-t">{{editingId ? '编辑学员' : '添加学员'}}</text>
+      <text class="sheet-t">{{editingId ? '学员资料' : '添加学员'}}</text>
       <text class="sheet-x" bindtap="onCloseForm">✕</text>
     </view>
 
@@ -44,52 +70,100 @@
         <text class="field-l">手机号</text>
         <input class="field-i" type="number" maxlength="11" placeholder="学员登录小程序用这个号" bindinput="onIn" data-k="phone" value="{{form.phone}}" />
       </view>
+      <view class="field">
+        <text class="field-l">备注</text>
+        <input class="field-i" maxlength="30" placeholder="如：四级 · 周末班" bindinput="onIn" data-k="note" value="{{form.note}}" />
+      </view>
 
-      <!-- 课时：方便上线时录入老学员已有数据 -->
+      <!-- 已报课程：点某行去改那条，会顺手把上面的资料存好 -->
+      <view class="grp" wx:if="{{editingId}}">
+        <text class="grp-t">已报课程<text class="opt">点行可改</text></text>
+        <text class="grp-d">课时和报名周期按课程登记，一个人可以报好几门</text>
+        <view class="st-row" wx:for="{{formCourses}}" wx:for-item="q" wx:key="courseType"
+              bindtap="onFormCourse" data-type="{{q.courseType}}">
+          <view class="sr1">
+            <text class="st-cn">{{q.courseName}}</text>
+            <text class="st-rm {{q.over ? 'neg' : ''}}">{{q.over ? '超 ' + q.overBy + ' 节' : (q.hasTotal ? '剩 ' + q.remain + ' 节' : '未填课时')}}</text>
+          </view>
+          <view class="sr2">
+            <text class="st-num">共报 {{q.total}} · 已上 {{q.used}}</text>
+            <text class="st-pd">改 ›</text>
+          </view>
+        </view>
+        <view class="st-add" bindtap="onFormAddEnroll">+ 加一门课</view>
+      </view>
+    </scroll-view>
+
+    <button class="btn btn-cobalt btn-full btn-nowrap" wx:if="{{editingId}}" bindtap="onSubmit">保存修改</button>
+    <view class="two-btn" wx:else>
+      <button class="btn btn-white btn-sm" bindtap="onSubmit">先不报课</button>
+      <button class="btn btn-cobalt btn-sm" bindtap="onSubmitAndEnroll">存好并加第一门课</button>
+    </view>
+    <view class="del" wx:if="{{editingId}}" bindtap="onRemove">删除该学员</view>
+  </view>
+
+  <!-- 一门课的报名弹层 -->
+  <view class="mask" wx:if="{{showEnroll}}" bindtap="onCloseEnroll"></view>
+  <view class="sheet" wx:if="{{showEnroll}}">
+    <view class="sheet-h">
+      <text class="sheet-t">{{enrollName}} · {{enrollCourseName || '加一门课'}}</text>
+      <text class="sheet-x" bindtap="onCloseEnroll">✕</text>
+    </view>
+
+    <scroll-view scroll-y class="form-body">
+      <view class="field">
+        <text class="field-l">课程类型</text>
+        <view class="ctypes">
+          <view class="ct {{t.cur ? 'on' : ''}} {{t.taken ? 'taken' : ''}}" wx:for="{{enrollTypes}}" wx:for-item="t" wx:key="id"
+                bindtap="onPickType" data-id="{{t.id}}" data-taken="{{t.taken ? '1' : '0'}}">
+            {{t.name}}<text class="ct-tag" wx:if="{{t.taken}}">已报</text>
+          </view>
+        </view>
+        <text class="grp-d" wx:if="{{!enrollIsNew}}">课程类型改不了：要换成别的课，先「删掉这门课」再新增一条。</text>
+      </view>
+
       <view class="grp">
         <text class="grp-t">课时</text>
-        <text class="grp-d">老学员直接填现状即可：共报几节、一共上了几节。之后在小程序里签到的课会自动累加到「已上」</text>
+        <text class="grp-d">老学员直接填现状：这门课共报几节、一共上了几节。之后小程序里签到、或取消时勾了扣课时的节数会自动累加到「已上」</text>
         <view class="two">
           <view class="sub">
             <text class="field-l">共报（节）</text>
-            <input class="field-i num" type="number" maxlength="4" placeholder="0" bindinput="onNum" data-k="totalLessons" value="{{form.totalLessons}}" />
+            <input class="field-i num" type="number" maxlength="4" placeholder="0" bindinput="onEnrollNum" data-k="totalLessons" value="{{enrollForm.totalLessons}}" />
           </view>
           <view class="sub">
             <text class="field-l">已上 · 共几节（节）</text>
-            <input class="field-i num" type="number" maxlength="4" placeholder="0" bindinput="onNum" data-k="doneBefore" value="{{form.doneBefore}}" />
+            <input class="field-i num" type="number" maxlength="4" placeholder="0" bindinput="onEnrollNum" data-k="doneBefore" value="{{enrollForm.doneBefore}}" />
           </view>
+        </view>
+        <view class="live" wx:if="{{live && live.has}}">
+          <text>{{live.total ? (live.remain >= 0 ? '还剩 ' + live.remain + ' 节' : '已超 ' + live.overBy + ' 节') : '没填共报 · 只记已上节数'}}</text>
+          <text wx:if="{{live.inApp}}"> · 系统内已上 {{live.inApp}} 节</text>
         </view>
       </view>
 
-      <!-- 报名日期：可选 -->
       <view class="grp">
         <text class="grp-t">报名日期<text class="opt">选填</text></text>
         <view class="two">
           <view class="sub">
             <text class="field-l">开始</text>
-            <picker mode="date" value="{{form.enrollStart}}" bindchange="onDate" data-k="enrollStart">
-              <view class="dt {{form.enrollStart ? 'has' : ''}}">{{form.enrollStart || '选择日期'}}</view>
+            <picker mode="date" value="{{enrollForm.start}}" bindchange="onEnrollDate" data-k="start">
+              <view class="dt {{enrollForm.start ? 'has' : ''}}">{{enrollForm.start || '选择日期'}}</view>
             </picker>
           </view>
           <view class="sub">
             <text class="field-l">结束</text>
-            <picker mode="date" value="{{form.enrollEnd}}" start="{{form.enrollStart}}" bindchange="onDate" data-k="enrollEnd">
-              <view class="dt {{form.enrollEnd ? 'has' : ''}}">{{form.enrollEnd || '选择日期'}}</view>
+            <picker mode="date" value="{{enrollForm.end}}" start="{{enrollForm.start}}" bindchange="onEnrollDate" data-k="end">
+              <view class="dt {{enrollForm.end ? 'has' : ''}}">{{enrollForm.end || '选择日期'}}</view>
             </picker>
           </view>
         </view>
-        <view class="clr" wx:if="{{form.enrollStart || form.enrollEnd}}" bindtap="onClearDates">清除日期</view>
-      </view>
-
-      <view class="field">
-        <text class="field-l">备注</text>
-        <input class="field-i" maxlength="30" placeholder="如：钢琴 · 四级" bindinput="onIn" data-k="note" value="{{form.note}}" />
+        <view class="clr" wx:if="{{enrollForm.start || enrollForm.end}}" bindtap="onClearDates">清除日期</view>
       </view>
     </scroll-view>
 
-    <button class="btn btn-cobalt btn-full btn-nowrap" bindtap="onSubmit">{{editingId ? '保存修改' : '确认添加'}}</button>
-    <view class="del" wx:if="{{editingId}}" bindtap="onRemove">删除该学员</view>
+    <view class="two-btn">
+      <view class="del del-in" wx:if="{{!enrollIsNew}}" bindtap="onRemoveEnroll">删掉这门课</view>
+      <button class="btn btn-cobalt btn-sm en-save" bindtap="onSubmitEnroll">保存这门课</button>
+    </view>
   </view>
-
-  <view style="height:60rpx"></view>
 </view>

@@ -63,9 +63,59 @@
 }
 .del:active, .del.tile-hover { transform: translate(6rpx,6rpx); box-shadow: 0 0 0 rgba(17,17,17,.25); }
 
-.item-over {
-  display: inline-block; margin-top: 10rpx; padding: 3rpx 16rpx;
-  border-radius: 100rpx; background: rgba(192,57,43,.1);
-  border: 3rpx solid #C0392B;
-  color: #C0392B; font-size: 21rpx; font-weight: 700; letter-spacing: .5rpx;
+/* ── 学员卡：一张卡里按门列报名，课时是跟着课程走的 ── */
+.st-card {
+  background: var(--white); border: var(--bd) solid var(--ink); border-radius: var(--r-md);
+  box-shadow: 10rpx 10rpx 0 var(--blue); padding: 30rpx 32rpx 26rpx; margin: 0 40rpx 30rpx;
 }
+.st-hd { display: flex; align-items: center; }
+.st-b { flex: 1; min-width: 0; }
+.st-cnt { text-align: center; flex-shrink: 0; margin-right: 10rpx; }
+.st-cnt-n { display: block; font-size: 34rpx; font-weight: 900; color: var(--ink); line-height: 1.1; }
+.st-cnt-l { display: block; font-size: 19rpx; color: rgba(17,17,17,.45); letter-spacing: 1rpx; }
+
+/* 撕票式虚线，把「人」和「他的课」分开 */
+.st-cut { height: 0; border-top: 3rpx dashed rgba(17,17,17,.3); margin: 24rpx 0 6rpx; }
+
+.st-row { padding: 18rpx 0; }
+.st-row + .st-row { border-top: 2rpx dashed rgba(17,17,17,.14); }
+.sr1 { display: flex; align-items: baseline; }
+.st-cn { font-size: 28rpx; font-weight: 800; color: var(--ink); letter-spacing: 1rpx; }
+.st-rm { margin-left: auto; font-size: 25rpx; font-weight: 800; color: var(--ink); }
+.st-rm.neg { color: #C0392B; }
+.sr2 { display: flex; align-items: baseline; margin-top: 6rpx; }
+.st-num { font-size: 21rpx; color: rgba(17,17,17,.55); }
+.st-pd { margin-left: auto; font-size: 21rpx; color: rgba(17,17,17,.42); }
+.st-none { font-size: 22rpx; color: rgba(17,17,17,.4); padding: 20rpx 0 4rpx; }
+
+.st-add {
+  margin-top: 20rpx; height: 62rpx; line-height: 56rpx; text-align: center;
+  border: 4rpx dashed rgba(17,17,17,.4); border-radius: 100rpx;
+  font-size: 24rpx; font-weight: 800; color: rgba(17,17,17,.55); letter-spacing: 1rpx;
+}
+.st-add:active { background: var(--sky); color: var(--ink); border-style: solid; border-color: var(--ink); }
+
+/* ── 报名弹层 ── */
+.sheet-t { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.ctypes { display: flex; flex-wrap: wrap; gap: 16rpx; }
+.ct {
+  padding: 14rpx 30rpx; border-radius: 100rpx; border: 4rpx solid var(--ink);
+  font-size: 26rpx; font-weight: 800; background: #FFFFFF; color: rgba(17,17,17,.7);
+  box-shadow: 6rpx 6rpx 0 rgba(17,17,17,.14);
+}
+.ct.on { background: var(--ink); color: #FFFFFF; box-shadow: 6rpx 6rpx 0 var(--pink); }
+.ct.taken { border-style: dashed; border-color: rgba(17,17,17,.3); color: rgba(17,17,17,.3); box-shadow: none; }
+.ct-tag { font-size: 18rpx; margin-left: 8rpx; letter-spacing: 1rpx; }
+
+.live {
+  display: inline-block; margin-top: 20rpx; padding: 8rpx 22rpx;
+  background: #FFFFFF; border: 3rpx solid var(--ink); border-radius: 100rpx;
+  font-size: 22rpx; font-weight: 800; color: var(--ink);
+  box-shadow: 6rpx 6rpx 0 var(--yellow);
+}
+
+.two-btn { display: flex; gap: 20rpx; margin-top: 32rpx; }
+.two-btn .btn { flex: 1 1 0; min-width: 0; }
+.two-btn .btn-white { flex: 0 0 auto; }
+.del-in { flex: 1 1 0; min-width: 0; margin-top: 0; padding: 18rpx 10rpx; font-size: 25rpx; white-space: nowrap; }
+.en-save { flex: 2 1 0 !important; }

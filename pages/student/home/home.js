@@ -3,7 +3,7 @@ const app = getApp()
 const lessons = require('../../../utils/lessons.js')
 const courses = require('../../../utils/courses.js')
 const dateUtil = require('../../../utils/date.js')
-const { LESSON_STATUS_TEXT, LESSON_STATUS_TAG } = require('../../../utils/constants.js')
+const { lessonStatusText, lessonStatusTag } = require('../../../utils/constants.js')
 
 Page({
   data: { userInfo: {}, todayText: '', displayName: '', upcomingLessons: [], doneCount: 0 },
@@ -32,12 +32,13 @@ Page({
         friendlyDate: dateUtil.friendlyDate(l.date),
         bg: ['#111111', '#FF5FA2', '#FFF3C4'][i % 3],
         ill: courses.byId(l.courseType).ill,
-        statusText: LESSON_STATUS_TEXT[l.status], statusTag: LESSON_STATUS_TAG[l.status]
+        statusText: lessonStatusText(l), statusTag: lessonStatusTag(l)
       }))
 
     this.setData({
       upcomingLessons: upcoming,
-      doneCount: mine.filter(l => l.status === 'completed').length
+      // 与课时汇总同一口径：签到完成 + 取消时勾了扣课时
+      doneCount: mine.filter(l => lessons.countsAsDone(l, myKeys)).length
     })
   },
 

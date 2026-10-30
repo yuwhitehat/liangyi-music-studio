@@ -52,8 +52,9 @@
         <view class="bk-s">{{item.studentNames ? '👤 ' + item.studentNames : '还没有人约课'}}</view>
         <view class="bk-a">
           <view class="ba-btn ba-main" wx:if="{{item.status === 'booked' && item.canCheckIn}}" bindtap="onComplete" data-id="{{item.id}}">签到</view>
-          <view class="ba-btn ba-main" wx:if="{{item.status === 'available'}}" bindtap="onOpenPicker" data-id="{{item.id}}" data-course="{{item.courseName}}" data-time="{{item.timeStart}}">指定学员</view>
+          <view class="ba-btn ba-main" wx:if="{{item.status === 'available'}}" bindtap="onOpenPicker" data-id="{{item.id}}" data-course="{{item.courseName}}" data-type="{{item.courseType}}" data-time="{{item.timeStart}}">指定学员</view>
           <view class="ba-btn" wx:if="{{item.status === 'booked'}}" bindtap="onCancel" data-id="{{item.id}}">取消课程</view>
+          <view class="ba-btn {{item.cancelCharge ? 'ba-charge' : ''}}" wx:if="{{item.status === 'cancelled'}}" bindtap="onCharge" data-id="{{item.id}}">{{item.cancelCharge ? '已扣课时 · 改' : '扣课时'}}</view>
           <view class="ba-btn" wx:if="{{item.status !== 'booked'}}" bindtap="onDelete" data-id="{{item.id}}">删除</view>
         </view>
       </view>
@@ -80,15 +81,63 @@
       <view class="pk-row" wx:for="{{pickerList}}" wx:key="id" bindtap="onToggleStudent" data-id="{{item.id}}">
         <view class="pk-ava" style="background:{{item.bg}};color:{{item.fg}}">{{item.name[0]}}</view>
         <view class="pk-b">
-          <view class="pk-n">{{item.name}}</view>
-          <view class="pk-s">{{item.note ? item.note : '未备注'}}</view>
+          <view class="pk-n">{{item.name}}<text class="pk-warn" wx:if="{{item.over}}">已超支</text><text class="pk-nb" wx:if="{{item.notEnrolled}}">未报本课</text></view>
+          <view class="pk-s">{{item.sub}}</view>
         </view>
         <view class="pk-box {{item.checked ? 'on' : ''}}">{{item.checked ? '✓' : ''}}</view>
       </view>
     </scroll-view>
+    <view class="pick-warn" wx:if="{{pickerWarn.length}}">
+      <view class="pw-t">这 {{pickerWarn.length}} 位要注意</view>
+      <view class="pw-l" wx:for="{{pickerWarn}}" wx:key="index">{{item.text}}</view>
+      <view class="pw-d">照常指定，课时会记成负数 · 记得补课时或改报名。</view>
+    </view>
     <view class="pk-foot">
       <text class="pk-cnt">已选 {{picked.length}} 人</text>
       <button class="btn btn-cobalt btn-sm" bindtap="onSaveBooking">保存</button>
+    </view>
+  </view>
+
+  <!-- 取消课程 / 扣课时弹层：后果说明 + 扣不扣，同屏一次决策 -->
+  <view class="mask" wx:if="{{showCx}}" bindtap="onCloseCx"></view>
+  <view class="sheet" wx:if="{{showCx}}">
+    <view class="sheet-h">
+      <text class="sheet-t">{{cx.title}}</text>
+      <text class="sheet-x" bindtap="onCloseCx">✕</text>
+    </view>
+    <view class="pk-target">{{cx.meta}}</view>
+    <view class="cx-note {{cx.started ? '' : 'go'}}">{{cx.note}}</view>
+
+    <view class="cx-lab">这节课是否扣学员课时？</view>
+    <view class="cx-opt {{cx.charge ? 'on' : ''}}" bindtap="onPickCharge" data-v="1">
+      <view class="cx-radio"></view>
+      <view class="cx-ob">
+        <view class="cx-ot">扣 1 节课时</view>
+        <view class="cx-od">学员缺课、或时间已占用 —— 名单上每人各扣 1 节</view>
+      </view>
+    </view>
+    <view class="cx-opt {{cx.charge ? '' : 'on'}}" bindtap="onPickCharge" data-v="0">
+      <view class="cx-radio"></view>
+      <view class="cx-ob">
+        <view class="cx-ot">不扣课时</view>
+        <view class="cx-od">按正常取消处理，学员课时不变</view>
+      </view>
+    </view>
+
+    <view class="cx-lab">名单（{{cx.students.length}} 人 · 按「{{cx.courseName}}」课时算）</view>
+    <scroll-view scroll-y class="cx-list" wx:if="{{!cx.none}}">
+      <view class="cx-stu" wx:for="{{cx.students}}" wx:key="id">
+        <text class="cx-nm">{{item.name}}</text>
+        <text class="cx-num" wx:if="{{item.hasQuota}}">本课 {{item.total}} · 已上 {{item.used}}<text class="cx-to {{cx.charge ? 'on' : ''}}" wx:if="{{cx.charge}}">→ {{item.usedAfter}}{{item.overAfter ? '（超支）' : ''}}</text></text>
+        <text class="cx-num" wx:elif="{{item.noRoster}}">未入册 · 无课时档案</text>
+        <text class="cx-num nb" wx:else>没报本课 · 扣了不计入课时</text>
+      </view>
+    </scroll-view>
+    <view class="cx-none" wx:else>这节课还没有学员，扣不扣都不影响课时</view>
+
+    <view class="pk-foot cx-foot">
+      <view class="ba-btn" bindtap="onCloseCx">{{cx.mode === 'charge' ? '关闭' : '再想想'}}</view>
+      <view class="ba-btn ba-main" bindtap="onConfirmCx">{{cx.confirmText}}</view>
     </view>
   </view>
 </view>

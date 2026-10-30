@@ -235,6 +235,25 @@ page {
 .t-sky    { background: var(--sky);    color: var(--ink); }
 .t-terra  { background: var(--blue);   color: #FFFFFF; }
 .t-mute   { background: #FFFFFF; color: rgba(17,17,17,.5); border-color: rgba(17,17,17,.25); }
+/* 已取消但扣了课时：实心黄，和淡黄的「待约」区分开 */
+.t-charge { background: var(--yellow);  color: var(--ink); }
+
+/* ============ 报名标记（课时按门记，选学员时这两类要当场看见） ============ */
+.pk-warn, .pk-nb {
+  font-size: 19rpx; font-weight: 800; border-radius: 100rpx; padding: 2rpx 14rpx;
+  margin-left: 12rpx; vertical-align: middle; letter-spacing: 1rpx;
+}
+.pk-warn { color: #C0392B; border: 3rpx solid #C0392B; background: rgba(192,57,43,.08); }
+.pk-nb { color: var(--blue); border: 3rpx solid var(--blue); }
+
+/* 只提示、不拦：老师看完自己决定要不要排 */
+.pick-warn {
+  background: #FFE9F1; border: 4rpx solid var(--ink); border-radius: 20rpx;
+  padding: 20rpx 24rpx; margin-top: 20rpx; box-shadow: 8rpx 8rpx 0 rgba(17,17,17,.14);
+}
+.pw-t { font-size: 25rpx; font-weight: 900; color: var(--ink); letter-spacing: 1rpx; }
+.pw-l { font-size: 22rpx; color: var(--ink); line-height: 1.7; margin-top: 6rpx; }
+.pw-d { font-size: 21rpx; color: rgba(17,17,17,.55); line-height: 1.6; margin-top: 10rpx; }
 
 /* ============ 筛选 ============ */
 .chips { display: flex; gap: 18rpx; padding: 8rpx 40rpx 36rpx; overflow-x: auto; white-space: nowrap; }

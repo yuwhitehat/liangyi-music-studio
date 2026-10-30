@@ -3,6 +3,7 @@ const app = getApp()
 const courses = require('../../../utils/courses.js')
 const students = require('../../../utils/students.js')
 const lessons = require('../../../utils/lessons.js')
+const quota = require('../../../utils/quota.js')
 const dateUtil = require('../../../utils/date.js')
 const { DURATIONS } = require('../../../utils/constants.js')
 
@@ -25,7 +26,7 @@ Page({
     durations: DURATIONS,
     startAt: '09:00', endAt: '10:00', minutes: 60,
     repeat: 0, times: 8, timesOptions: [4, 8, 12, 24], weekdayText: '', lastDate: '',
-    hasBooking: false, pickedStudents: [], pickedNames: '',
+    hasBooking: false, pickedStudents: [], pickedNames: '', pickWarn: [],
     slots: [],
     showPicker: false, keyword: '', pickerList: []
   },
@@ -69,7 +70,7 @@ Page({
       selectedIll: courses.byId(id).ill,
       minutes: parseInt(dur, 10),
       endAt: toHM(toMin(this.data.startAt) + parseInt(dur, 10))
-    })
+    }, () => this.recheckPicked())
   },
 
   onStartChange(e) {
@@ -117,16 +118,31 @@ Page({
   onClosePicker() { this.setData({ showPicker: false }) },
   onSearchStudent(e) { this.setData({ keyword: e.detail.value }, () => this.buildPicker()) },
 
+  /**
+   * 课时按门记，所以选完学员要按「这门课」复查：
+   * 没报本课 / 本课已超支都只提示，不拦 —— 老师自己决定要不要排这一节。
+   */
+  recheckPicked() {
+    const warn = quota.auditStudents(this.data.selectedCourse, this.data.pickedStudents)
+    this.setData({ pickWarn: warn }, () => { if (this.data.showPicker) this.buildPicker() })
+  },
+
   buildPicker() {
     const kw = this.data.keyword
+    const type = this.data.selectedCourse
     const picked = this.data.pickedStudents.map(s => s.id)
     const rows = students.list()
       .filter(s => !kw || s.name.indexOf(kw) > -1 || (s.phone || '').indexOf(kw) > -1)
-      .map((s, i) => ({
-        ...s,
-        bg: AVA[i % AVA.length].bg, fg: AVA[i % AVA.length].fg,
-        checked: picked.indexOf(s.id) > -1
-      }))
+      .map((s, i) => {
+        const a = AVA[i % AVA.length]
+        const q = quota.summary(s.id, type)
+        return {
+          ...s, bg: a.bg, fg: a.fg,
+          checked: picked.indexOf(s.id) > -1,
+          notEnrolled: !q, over: !!(q && q.over),
+          sub: q ? (q.courseName + ' 剩 ' + q.remain + ' 节') : (s.note ? s.note + ' · 没报本课' : '没报本课')
+        }
+      })
     this.setData({ pickerList: rows })
   },
 
@@ -147,7 +163,7 @@ Page({
     this.setData({
       pickedStudents: list,
       pickedNames: list.map(s => s.name).join('、')
-    }, () => this.buildPicker())
+    }, () => this.recheckPicked())
   },
 
   // ── 待排列表 ──
@@ -197,7 +213,7 @@ Page({
       startAt: cand.timeEnd, endAt: toHM(toMin(cand.timeEnd) + d.minutes)
     }
     // 清掉本次学员选择，避免误带进下一节
-    patch.hasBooking = false; patch.pickedStudents = []; patch.pickedNames = ''
+    patch.hasBooking = false; patch.pickedStudents = []; patch.pickedNames = ''; patch.pickWarn = []
     this.setData(patch)
     wx.showToast({
       title: d.repeat ? '已添加 ' + d.times + ' 节' : '已添加',

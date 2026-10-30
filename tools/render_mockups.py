@@ -14,6 +14,7 @@ OUT = os.path.join(ROOT, 'docs', 'mockups')
 
 # ── 设计令牌（与 app.wxss 顶部一致）──
 PINK, YELLOW, BLUE = '#FF5FA2', '#FFD23F', '#4D8DFF'
+PINKD = '#E93E83'    # --pink-d：选中态描边/深色文字
 INK = '#111111'
 WHITE = '#FFFFFF'
 PAPER = '#F6F4EE'
@@ -39,6 +40,7 @@ SUB3 = mix(INK, .30, WHITE)
 SH_SOFT = mix(INK, .14, PAPER)     # 小控件的浅硬影
 TAGC = {'t-cobalt': (PINK, INK, INK), 't-sky': (SKY, INK, INK),
         't-terra': (BLUE, WHITE, INK), 't-over': (YELLOW, INK, INK),
+        't-charge': (YELLOW, INK, INK),
         't-mute': (WHITE, mix(INK, .5, WHITE), mix(INK, .25, WHITE))}
 
 FP = '/System/Library/Fonts/Hiragino Sans GB.ttc'

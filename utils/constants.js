@@ -22,6 +22,22 @@ const LESSON_STATUS_TAG = {
   cancelled: 't-cobalt'   // 已取消
 }
 
+/**
+ * 状态文案。已取消但老师选了「扣课时」的要单独标出来，
+ * 否则学员看到课时少了一节，却在记录里找不出是哪节课。
+ */
+function lessonStatusText(l) {
+  if (!l) return ''
+  if (l.status === 'cancelled' && l.cancelCharge) return '已取消 · 已扣课时'
+  return LESSON_STATUS_TEXT[l.status] || l.status
+}
+
+function lessonStatusTag(l) {
+  if (!l) return 't-mute'
+  if (l.status === 'cancelled' && l.cancelCharge) return 't-charge'
+  return LESSON_STATUS_TAG[l.status] || 't-mute'
+}
+
 // 课程类型
 // 默认课程类型（工作室实际开设的四门）
 // 运行时以 utils/courses.js 的可编辑副本为准，超管可增删改
@@ -65,6 +81,8 @@ module.exports = {
   LESSON_STATUS,
   LESSON_STATUS_TEXT,
   LESSON_STATUS_TAG,
+  lessonStatusText: lessonStatusText,
+  lessonStatusTag: lessonStatusTag,
   COURSE_TYPES,
   COURSE_ILL,
   ICON_LIBRARY,

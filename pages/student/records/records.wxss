@@ -19,32 +19,37 @@
 .rc-t { font-size: 32rpx; font-weight: 800; color: var(--ink); }
 .rc-m { display: block; font-size: 24rpx; color: rgba(17,17,17,.5); margin-top: 12rpx; }
 
-/* ── 我的课时档案 ── */
+/* ── 我的课时：一门课一行，全收在一张卡里（每门课一张卡会把屏幕顶掉） ── */
 .enroll {
-  margin: 32rpx 40rpx 0; padding: 32rpx;
+  margin: 32rpx 40rpx 0;
   background: #FFFFFF; border: var(--bd) solid var(--ink); border-radius: 32rpx;
-  box-shadow: 12rpx 12rpx 0 var(--yellow);
+  box-shadow: 12rpx 12rpx 0 var(--yellow); overflow: hidden;
 }
-.en-top { display: flex; }
-.en-cell { flex: 1; text-align: center; }
-.en-n { display: block; font-size: 52rpx; font-weight: 900; color: var(--ink); line-height: 1; }
-.en-hi { color: var(--ink); background: var(--pink); display: inline-block;
-  padding: 0 14rpx; border-radius: 100rpx; }
-.en-l { display: block; font-size: 21rpx; color: rgba(17,17,17,.5); margin-top: 12rpx; letter-spacing: 1rpx; }
+.en-h { display: flex; align-items: baseline; padding: 22rpx 32rpx;
+  background: var(--sky); border-bottom: 4rpx solid var(--ink); }
+.en-h1 { font-size: 30rpx; font-weight: 900; color: var(--ink); letter-spacing: 2rpx; }
+.en-h2 { margin-left: auto; font-size: 21rpx; color: rgba(17,17,17,.5); letter-spacing: 1rpx; }
 
-.en-bar { height: 20rpx; border-radius: 100rpx; background: #FFFFFF;
-  border: 4rpx solid var(--ink); overflow: hidden; margin-top: 30rpx; }
+.en-row { padding: 24rpx 32rpx 22rpx; }
+.en-row + .en-row { border-top: 3rpx dashed rgba(17,17,17,.18); }
+.en1 { display: flex; align-items: baseline; }
+.en-c { font-size: 30rpx; font-weight: 800; color: var(--ink); letter-spacing: 1rpx; }
+.en-n { margin-left: auto; font-size: 40rpx; font-weight: 900; color: var(--ink); line-height: 1; }
+.en-u { font-size: 21rpx; font-weight: 700; color: rgba(17,17,17,.5); margin-left: 4rpx; }
+
+.en-bar { height: 18rpx; border-radius: 100rpx; background: #FFFFFF;
+  border: 4rpx solid var(--ink); overflow: hidden; margin-top: 18rpx; }
 .en-fill { height: 100%; background: var(--blue); }
 
-.en-date {
-  display: flex; align-items: center; gap: 16rpx;
-  margin-top: 28rpx; padding-top: 26rpx; border-top: 4rpx dashed rgba(17,17,17,.3);
-}
-.en-dl { font-size: 22rpx; color: rgba(17,17,17,.5); letter-spacing: 2rpx; flex-shrink: 0; }
-.en-dv { font-size: 26rpx; font-weight: 700; color: var(--ink); flex: 1; letter-spacing: .5rpx; }
-.en-dd { font-size: 21rpx; font-weight: 700; color: var(--ink); background: var(--yellow);
-  border: 3rpx solid var(--ink); padding: 4rpx 16rpx; border-radius: 100rpx; flex-shrink: 0; }
+.en2 { display: flex; align-items: center; gap: 14rpx; margin-top: 14rpx; }
+.en-d { font-size: 21rpx; color: rgba(17,17,17,.55); flex: 1; }
+.en-tip { font-size: 20rpx; font-weight: 800; color: #C0392B;
+  border: 3rpx solid #C0392B; background: rgba(192,57,43,.08);
+  padding: 3rpx 16rpx; border-radius: 100rpx; flex-shrink: 0; }
+.en-dd { font-size: 20rpx; font-weight: 700; color: var(--ink); background: var(--yellow);
+  border: 3rpx solid var(--ink); padding: 3rpx 16rpx; border-radius: 100rpx; flex-shrink: 0; }
+.en-span { font-size: 20rpx; color: rgba(17,17,17,.42); margin-top: 8rpx; letter-spacing: .5rpx; }
 
 .en-over { color: #C0392B; }
 .en-fill-over { background: #C0392B; }
-.en-over-tip { margin-top: 16rpx; font-size: 22rpx; color: #C0392B; font-weight: 700; letter-spacing: .5rpx; }
+.en-none { padding: 26rpx 32rpx; font-size: 22rpx; color: rgba(17,17,17,.5); line-height: 1.7; }

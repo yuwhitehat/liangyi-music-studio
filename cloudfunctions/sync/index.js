@@ -8,6 +8,7 @@
 const cloud = require('wx-server-sdk')
 cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV })
 const db = cloud.database()
+const _ = db.command
 const PAGE = 100
 
 const ok  = function (data) { return { code: 0, data: data } }
@@ -91,6 +92,49 @@ async function push(event, m) {
 }
 
 // 学员自助约课 / 取消：只动 students，且只能写自己
+//
+// 加入名单前还有一道闸门，规则与客户端 utils/quota.js 的 bookable 一致：
+// 报了这门课才让约，这门课的课时超了要先找老师补。云端模式下不能只靠前端拦。
+function myKeys(m) {
+  const keys = [String(m.refId || ''), String(m.openid || '')]
+  if (m.phone) keys.push('p_' + m.phone)
+  return keys.filter(Boolean)
+}
+
+// 名册行：id 字段和云端 _id 都可能被当作 refId，两种都试一次
+async function rosterOf(m) {
+  const r = await db.collection('students').where({ id: _.in(myKeys(m)) }).limit(1).get()
+  if (r.data.length) return r.data[0]
+  if (!m.refId) return null
+  const d = await db.collection('students').doc(String(m.refId)).get().catch(function () { return null })
+  return d && d.data ? d.data : null
+}
+
+// 这门课系统内已上的节数 —— completed 或「取消但勾了扣课时」
+async function doneInApp(keys, courseType) {
+  const hit = { courseType: courseType, students: _.elemMatch({ id: _.in(keys) }) }
+  const done = await db.collection('lessons').where(Object.assign({}, hit, { status: 'completed' })).count()
+  const charged = await db.collection('lessons').where(Object.assign({}, hit, { status: 'cancelled', cancelCharge: true })).count()
+  return done.total + charged.total
+}
+
+async function bookingGate(m, lesson) {
+  const type = lesson.courseType
+  if (!type) return null                       // 没有课程类型的课不拦，避免误伤脏数据
+  const keys = myKeys(m)
+  const rec = await rosterOf(m)
+  if (!rec) return '老师还没给你登记报名课程，请联系老师。'
+  const e = (rec.enrollments || []).filter(function (x) { return x.courseType === type })[0]
+  if (!e) return '你没有报名这门课，约不了。想学的话请联系老师登记。'
+  const total = Number(e.totalLessons) || 0
+  const used = (Number(e.doneBefore) || 0) + await doneInApp(keys, type)
+  if (total > 0 && used > total) {
+    return '这门课共 ' + total + ' 节、已上 ' + used + ' 节，超出 ' + (used - total)
+      + ' 节。请先联系老师补充课时，再回来约课。'
+  }
+  return null
+}
+
 async function book(event, m) {
   if (!m) return err('未登录', 401)
   const p = event.payload || {}
@@ -107,6 +151,8 @@ async function book(event, m) {
 
   if (p.action === 'add') {
     if (cur.some(function (s) { return s.id === me.id })) return ok({ already: true })
+    const deny = await bookingGate(m, lesson)          // 退课不拦，约课才拦
+    if (deny) return err(deny, 403)
     const students = cur.concat([me])
     await db.collection('lessons').doc(String(p.lessonId)).update({
       data: { students: students, booked: true, status: 'booked' }
@@ -116,9 +162,9 @@ async function book(event, m) {
 
   if (p.action === 'remove') {
     const students = cur.filter(function (s) { return s.id !== me.id })   // 只能移除自己
-    // 与客户端同一套规则：已过结束时间的课标记 cancelled 并保留原名单，
-    // 未下课的才释放为待约。服务端不依赖客户端做这个判断。
-    const ended = hoursUntil(lesson.date, lesson.timeEnd) <= 0
+    // 与客户端同一套规则：已过上课开始时间的课标记 cancelled 并保留原名单，
+    // 未到开始时间的才释放为待约。服务端不依赖客户端做这个判断。
+    const ended = hoursUntil(lesson.date, lesson.timeStart) <= 0
     await db.collection('lessons').doc(String(p.lessonId)).update(
       ended
         ? { data: { status: 'cancelled' } }                       // 保留 students

@@ -6,7 +6,7 @@ const studio = require('../../../utils/studio.js')
 const dateUtil = require('../../../utils/date.js')
 const dialog = require('../../../utils/dialog.js')
 const cloudkit = require('../../../utils/cloudkit.js')
-const { LESSON_STATUS_TEXT, LESSON_STATUS_TAG } = require('../../../utils/constants.js')
+const { lessonStatusText, lessonStatusTag } = require('../../../utils/constants.js')
 
 const BG = [
   { bg: '#111111', fg: '#FFFFFF' }, { bg: '#FF5FA2', fg: '#FFFFFF' },
@@ -56,8 +56,8 @@ Page({
           isOverdue: overdue,
           canCheckIn: lessons.canCheckIn(l).ok,
           hoursLeft: Math.round(hours * 10) / 10,
-          statusText: overdue ? '已逾期' : LESSON_STATUS_TEXT[l.status],
-          statusTag: overdue ? 't-over' : LESSON_STATUS_TAG[l.status]
+          statusText: overdue ? '已逾期' : lessonStatusText(l),
+          statusTag: overdue ? 't-over' : lessonStatusTag(l)
         }
       })
     this.setData({ activeTab: tab, displayLessons: list })
@@ -96,7 +96,7 @@ Page({
 
     dialog.show({
       title: '取消课程',
-      content: '确定取消「' + d.course + '」' + d.date + ' ' + d.time + ' 这节课吗？课程还没上，取消后名额会释放给其他同学。',
+      content: '确定取消「' + d.course + '」' + d.date + ' ' + d.time + ' 这节课吗？未到上课时间，取消后名额会释放给其他同学。',
       confirmText: '确认取消', confirmColor: '#FF5FA2',
       success: (r) => {
         if (!r.confirm) return

@@ -29,3 +29,15 @@
 .bk-chip { width: 68rpx; height: 68rpx; border-radius: 20rpx; background-color: var(--sky);
   border: 3rpx solid var(--ink); flex-shrink: 0;
   background-repeat: no-repeat; background-position: center; background-size: 44rpx 44rpx; margin-right: 20rpx; }
+
+/* 只开放自己报过名的课程：胶囊上带这门课的剩余节数 */
+.chip.bad { color: #C0392B; border-color: #C0392B; }
+.chip.bad.on { color: #FFFFFF; border-color: var(--ink); }
+
+.bk-over { font-size: 21rpx; font-weight: 700; color: #C0392B; margin-top: 8rpx; line-height: 1.5; }
+.bk-go.off { background: #FFFFFF; color: #C0392B; }
+
+.no-enroll { background: #FFFFFF; border: var(--bd) solid var(--ink); border-radius: var(--r-md);
+  box-shadow: 10rpx 10rpx 0 var(--yellow); margin: 0 40rpx 28rpx; padding: 34rpx 34rpx 30rpx; }
+.ne-t { font-size: 30rpx; font-weight: 900; color: var(--ink); letter-spacing: 1rpx; }
+.ne-d { font-size: 23rpx; color: rgba(17,17,17,.55); line-height: 1.7; margin-top: 12rpx; }
